@@ -11,10 +11,10 @@ add_custom_target(
 
 # The main executable
 add_executable(main
+        src/ApplicationCore.cpp
+        src/ApplicationCore.cpp
         src/Application.cpp
         src/Application.cpp
-        src/MyApplication.cpp
-        src/MyApplication.cpp
         src/glError.hpp
         src/glError.cpp
         src/main.cpp

@@ -1,70 +1,28 @@
-#ifndef OPENGL_CMAKE_SKELETON_APPLICATION_HPP
-#define OPENGL_CMAKE_SKELETON_APPLICATION_HPP
+#ifndef OPENGL_CMAKE_SKELETON_MYAPPLICATION
+#define OPENGL_CMAKE_SKELETON_MYAPPLICATION
 
-#include <string>
+#include "ApplicationCore.hpp"
+#include "Shader.hpp"
 
-struct GLFWwindow;
-
-/// Application class:
-/// * init OpenGL
-/// * provide:
-///   * getWidth()
-///   * getHeight()
-///   * getFrameDeltaTime()
-///   * getWindowRatio()
-///   * windowDimensionChanged()
-/// * let the user define the "loop" function.
-class Application {
+class Application : public ApplicationCore {
  public:
   Application();
 
-  static Application& getInstance();
-
-  // get the window id
-  GLFWwindow* getWindow() const;
-
-  // window control
-  void exit();
-
-  // delta time between frame and time from beginning
-  float getFrameDeltaTime() const;
-  float getTime() const;
-
-  // application run
-  void run();
-
-  // Application informations
-  //
-  int getWidth() const;
-  int getHeight() const;
-  float getWindowRatio() const;
-  bool windowDimensionChanged() const;
+ protected:
+  void loop() override;
 
  private:
-  enum State { stateReady, stateRun, stateExit };
+  float time = 0.f;
+  const int size = 100;
 
-  State state;
+  Shader vertexShader;
+  Shader fragmentShader;
+  ShaderProgram shaderProgram;
 
-  Application& operator=(const Application&) { return *this; }
+  glm::mat4 projection = glm::mat4(1.0);
+  glm::mat4 view = glm::mat4(1.0);
 
-  GLFWwindow* window;
-
-  // Time:
-  float time;
-  float deltaTime;
-
-  // Dimensions:
-  int width;
-  int height;
-  bool dimensionChanged;
-  void detectWindowDimensionChange();
-
- protected:
-  Application(const Application&){};
-
-  std::string title;
-
-  virtual void loop();
+  GLuint vao, vbo, ibo;
 };
 
-#endif /* end of include guard: OPENGL_CMAKE_SKELETON_APPLICATION_HPP */
+#endif

@@ -1,7 +1,7 @@
-#include "MyApplication.hpp"
+#include "Application.hpp"
 
-int main(int argc, const char* argv[]) {
-  MyApplication app;
+int main(int argc, const char *argv[]) {
+  Application app;
   app.run();
   return 0;
 }
