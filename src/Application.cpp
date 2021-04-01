@@ -38,11 +38,11 @@ VertexType getHeightMap(const glm::vec2 position) {
   return v;
 }
 
-Application::Application()
-    : ApplicationCore(),
-      vertexShader(SHADER_DIR "/shader.vert", GL_VERTEX_SHADER),
-      fragmentShader(SHADER_DIR "/shader.frag", GL_FRAGMENT_SHADER),
-      shaderProgram({vertexShader, fragmentShader}) {
+Application::Application() :
+    ApplicationCore(),
+    vertexShader(SHADER_DIR "/shader.vert", GL_VERTEX_SHADER),
+    fragmentShader(SHADER_DIR "/shader.frag", GL_FRAGMENT_SHADER),
+    shaderProgram({vertexShader, fragmentShader}) {
   glCheckError(__FILE__, __LINE__);
 
   // creation of the mesh ------------------------------------------------------
@@ -113,9 +113,12 @@ Application::Application()
 }
 
 void Application::loop() {
+  ApplicationCore::loop();
+
   // exit on window close button pressed
-  if (glfwWindowShouldClose(getWindow()))
+  if (glfwWindowShouldClose(getWindow())) {
     exit();
+  }
 
   float t = getTime();
   // set matrix : projection + view

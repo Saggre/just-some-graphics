@@ -18,19 +18,25 @@ ApplicationCore &ApplicationCore::getInstance() {
 }
 
 ApplicationCore::ApplicationCore()
-    : state(stateReady), width(640), height(480), title("ApplicationCore") {
+    : state(stateReady), title("ApplicationCore") {
   currentApplication = this;
 
   time = 0.0;
   deltaTime = 0.0;
   dimensionChanged = false;
 
-  cout << "[Info] GLFW initialisation" << endl;
+  cout << "[Info]: GLFW initialisation" << endl;
 
   // initialize the GLFW library
   if (!glfwInit()) {
     throw std::runtime_error("Couldn't init GLFW");
   }
+
+  GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+  const GLFWvidmode *vidMode = glfwGetVideoMode(monitor);
+
+  width = vidMode->width;
+  height = vidMode->height;
 
   // setting the opengl version
   int major = 4;
@@ -41,11 +47,17 @@ ApplicationCore::ApplicationCore()
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // create the window
-  window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+  window = glfwCreateWindow(width, height, title.c_str(), monitor, nullptr);
   if (!window) {
     glfwTerminate();
     throw std::runtime_error("Couldn't create a window");
   }
+
+  glfwSetKeyCallback(window, [](GLFWwindow *win, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+      glfwSetWindowShouldClose(win, GLFW_TRUE);
+    }
+  });
 
   glfwMakeContextCurrent(window);
 
@@ -121,7 +133,9 @@ void ApplicationCore::detectWindowDimensionChange() {
   }
 }
 
-void ApplicationCore::loop() { cout << "[INFO] : loop" << endl; }
+void ApplicationCore::loop() {
+  cout << "[INFO]: Run loop\n";
+}
 
 int ApplicationCore::getWidth() const { return width; }
 
