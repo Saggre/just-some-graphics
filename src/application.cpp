@@ -1,4 +1,4 @@
-#include "Application.hpp"
+#include "application.hpp"
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#include "glError.hpp"
+#include "gl_error.hpp"
 
 #define SHADER_DIR "../shader/"
 
@@ -17,18 +17,18 @@ struct VertexType {
   glm::vec4 color;
 };
 
-float heightMap(const glm::vec2 position) {
+float HeightMap(const glm::vec2 position) {
   return 2.0 * sin(position.x) * sin(position.y);
 }
 
-VertexType getHeightMap(const glm::vec2 position) {
+VertexType GetHeightMap(const glm::vec2 position) {
   const glm::vec2 dx(1.0, 0.0);
   const glm::vec2 dy(0.0, 1.0);
 
   VertexType v;
-  float h = heightMap(position);
-  float hx = 100.f * (heightMap(position + 0.01f * dx) - h);
-  float hy = 100.f * (heightMap(position + 0.01f * dy) - h);
+  float h = HeightMap(position);
+  float hx = 100.f * (HeightMap(position + 0.01f * dx) - h);
+  float hy = 100.f * (HeightMap(position + 0.01f * dy) - h);
 
   v.position = glm::vec3(position, h);
   v.normal = glm::normalize(glm::vec3(-hx, -hy, 1.0));
@@ -40,10 +40,10 @@ VertexType getHeightMap(const glm::vec2 position) {
 
 Application::Application() :
     ApplicationCore(),
-    vertexShader(SHADER_DIR "/shader.vert", GL_VERTEX_SHADER),
-    fragmentShader(SHADER_DIR "/shader.frag", GL_FRAGMENT_SHADER),
-    shaderProgram({vertexShader, fragmentShader}) {
-  glCheckError(__FILE__, __LINE__);
+    vertex_shader(SHADER_DIR "/shader.vert", GL_VERTEX_SHADER),
+    fragment_shader(SHADER_DIR "/shader.frag", GL_FRAGMENT_SHADER),
+    shader_program({vertex_shader, fragment_shader}) {
+  GLCheckError(__FILE__, __LINE__);
 
   // creation of the mesh ------------------------------------------------------
   std::vector<VertexType> vertices;
@@ -53,7 +53,7 @@ Application::Application() :
     for (int x = 0; x <= size; ++x) {
       float xx = (x - size / 2) * 0.1f;
       float yy = (y - size / 2) * 0.1f;
-      vertices.push_back(getHeightMap({xx, yy}));
+      vertices.push_back(GetHeightMap({xx, yy}));
     }
 
   for (int y = 0; y < size; ++y)
@@ -98,12 +98,12 @@ Application::Application() :
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
   // map vbo to shader attributes
-  shaderProgram.setAttribute("position", 3, sizeof(VertexType),
-                             offsetof(VertexType, position));
-  shaderProgram.setAttribute("normal", 3, sizeof(VertexType),
-                             offsetof(VertexType, normal));
-  shaderProgram.setAttribute("color", 4, sizeof(VertexType),
-                             offsetof(VertexType, color));
+  shader_program.SetAttribute("position", 3, sizeof(VertexType),
+                              offsetof(VertexType, position));
+  shader_program.SetAttribute("normal", 3, sizeof(VertexType),
+                              offsetof(VertexType, normal));
+  shader_program.SetAttribute("color", 4, sizeof(VertexType),
+                              offsetof(VertexType, color));
 
   // bind the ibo
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -112,18 +112,18 @@ Application::Application() :
   glBindVertexArray(0);
 }
 
-void Application::loop() {
-  ApplicationCore::loop();
+void Application::Loop() {
+  ApplicationCore::Loop();
 
   // exit on window close button pressed
-  if (glfwWindowShouldClose(getWindow())) {
-    exit();
+  if (glfwWindowShouldClose(GetWindow())) {
+    Exit();
   }
 
-  float t = getTime();
+  float t = GetTime();
   // set matrix : projection + view
   projection = glm::perspective(float(2.0 * atan(getHeight() / 1920.f)),
-                                getWindowRatio(), 0.1f, 100.f);
+                                GetWindowRatio(), 0.1f, 100.f);
   view = glm::lookAt(glm::vec3(20.0 * sin(t), 20.0 * cos(t), 20.0),
                      glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 1.0));
 
@@ -132,27 +132,27 @@ void Application::loop() {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  shaderProgram.use();
+  shader_program.Use();
 
   // send uniforms
-  shaderProgram.setUniform("projection", projection);
-  shaderProgram.setUniform("view", view);
+  shader_program.SetUniform("projection", projection);
+  shader_program.SetUniform("view", view);
 
-  glCheckError(__FILE__, __LINE__);
+  GLCheckError(__FILE__, __LINE__);
 
   glBindVertexArray(vao);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-  glCheckError(__FILE__, __LINE__);
+  GLCheckError(__FILE__, __LINE__);
   glDrawElements(GL_TRIANGLES,        // mode
                  size * size * 2 * 3, // count
                  GL_UNSIGNED_INT,     // type
-                 NULL                 // element array buffer offset
+                 nullptr                 // element array buffer offset
   );
 
   glBindVertexArray(0);
 
-  ShaderProgram::unuse();
+  ShaderProgram::Unuse();
 }

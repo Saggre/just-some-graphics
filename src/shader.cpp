@@ -1,4 +1,4 @@
-#include "Shader.hpp"
+#include "shader.hpp"
 
 #include <cstdlib>
 #include <fstream>
@@ -11,7 +11,7 @@ using namespace std;
 using namespace glm;
 
 // file reading
-void getFileContents(const char *filename, vector<char> &buffer) {
+void GetFileContents(const char *filename, vector<char> &buffer) {
   ifstream file(filename, ios_base::binary);
   if (file) {
     file.seekg(0, ios_base::end);
@@ -29,8 +29,8 @@ void getFileContents(const char *filename, vector<char> &buffer) {
 
 Shader::Shader(const std::string &filename, GLenum type) {
   // file loading
-  vector<char> fileContent;
-  getFileContents(filename.c_str(), fileContent);
+  vector<char> file_content;
+  GetFileContents(filename.c_str(), file_content);
 
   // creation
   handle = glCreateShader(type);
@@ -38,7 +38,7 @@ Shader::Shader(const std::string &filename, GLenum type) {
     throw std::runtime_error("[Error] Impossible to create a new Shader");
 
   // code source assignation
-  const char *shaderText(&fileContent[0]);
+  const char *shaderText(&file_content[0]);
   glShaderSource(handle, 1, (const GLchar **) &shaderText, nullptr);
 
   // compilation
@@ -63,7 +63,7 @@ Shader::Shader(const std::string &filename, GLenum type) {
   }
 }
 
-GLuint Shader::getHandle() const { return handle; }
+GLuint Shader::GetHandle() const { return handle; }
 
 Shader::~Shader() = default;
 
@@ -76,12 +76,12 @@ ShaderProgram::ShaderProgram() {
 ShaderProgram::ShaderProgram(std::initializer_list<Shader> shaderList)
     : ShaderProgram() {
   for (auto &s : shaderList)
-    glAttachShader(handle, s.getHandle());
+    glAttachShader(handle, s.GetHandle());
 
-  link();
+  GetFileContents();
 }
 
-void ShaderProgram::link() const {
+void ShaderProgram::GetFileContents() const {
   glLinkProgram(handle);
   GLint result;
   glGetProgramiv(handle, GL_LINK_STATUS, &result);
@@ -98,7 +98,7 @@ void ShaderProgram::link() const {
   }
 }
 
-GLint ShaderProgram::uniform(const std::string &name) {
+GLint ShaderProgram::Uniform(const std::string &name) {
   auto it = uniforms.find(name);
   if (it == uniforms.end()) {
     // uniform that is not referenced
@@ -113,7 +113,7 @@ GLint ShaderProgram::uniform(const std::string &name) {
     return it->second;
 }
 
-GLint ShaderProgram::attribute(const std::string &name) const {
+GLint ShaderProgram::Attribute(const std::string &name) const {
   GLint attrib = glGetAttribLocation(handle, name.c_str());
   if (attrib == GL_INVALID_OPERATION || attrib < 0) {
     cout << "[Error] Attribute " << name << " doesn't exist in program" << endl;
@@ -122,81 +122,81 @@ GLint ShaderProgram::attribute(const std::string &name) const {
   return attrib;
 }
 
-void ShaderProgram::setAttribute(
+void ShaderProgram::SetAttribute(
     const std::string &name, GLint size, GLsizei stride, GLuint offset, GLboolean normalize, GLenum type
 ) const {
-  GLint loc = attribute(name);
+  GLint loc = Attribute(name);
   glEnableVertexAttribArray(loc);
   glVertexAttribPointer(loc, size, type, normalize, stride, reinterpret_cast<void *>(offset));
 }
 
-void ShaderProgram::setAttribute(
+void ShaderProgram::SetAttribute(
     const std::string &name, GLint size, GLsizei stride, GLuint offset, GLboolean normalize
 ) const {
-  setAttribute(name, size, stride, offset, normalize, GL_FLOAT);
+  SetAttribute(name, size, stride, offset, normalize, GL_FLOAT);
 }
 
-void ShaderProgram::setAttribute(
+void ShaderProgram::SetAttribute(
     const std::string &name, GLint size, GLsizei stride, GLuint offset, GLenum type
 ) const {
-  setAttribute(name, size, stride, offset, false, type);
+  SetAttribute(name, size, stride, offset, false, type);
 }
 
-void ShaderProgram::setAttribute(
+void ShaderProgram::SetAttribute(
     const std::string &name, GLint size, GLsizei stride, GLuint offset
 ) const {
-  setAttribute(name, size, stride, offset, false, GL_FLOAT);
+  SetAttribute(name, size, stride, offset, false, GL_FLOAT);
 }
 
-void ShaderProgram::setUniform(
+void ShaderProgram::SetUniform(
     const std::string &name, float x, float y, float z
 ) {
-  glUniform3f(uniform(name), x, y, z);
+  glUniform3f(Uniform(name), x, y, z);
 }
 
-void ShaderProgram::setUniform(const std::string &name, const vec3 &v) {
-  glUniform3fv(uniform(name), 1, value_ptr(v));
+void ShaderProgram::SetUniform(const std::string &name, const vec3 &v) {
+  glUniform3fv(Uniform(name), 1, value_ptr(v));
 }
 
-void ShaderProgram::setUniform(const std::string &name, const dvec3 &v) {
-  glUniform3dv(uniform(name), 1, value_ptr(v));
+void ShaderProgram::SetUniform(const std::string &name, const dvec3 &v) {
+  glUniform3dv(Uniform(name), 1, value_ptr(v));
 }
 
-void ShaderProgram::setUniform(const std::string &name, const vec4 &v) {
-  glUniform4fv(uniform(name), 1, value_ptr(v));
+void ShaderProgram::SetUniform(const std::string &name, const vec4 &v) {
+  glUniform4fv(Uniform(name), 1, value_ptr(v));
 }
 
-void ShaderProgram::setUniform(const std::string &name, const dvec4 &v) {
-  glUniform4dv(uniform(name), 1, value_ptr(v));
+void ShaderProgram::SetUniform(const std::string &name, const dvec4 &v) {
+  glUniform4dv(Uniform(name), 1, value_ptr(v));
 }
 
-void ShaderProgram::setUniform(const std::string &name, const dmat4 &m) {
-  glUniformMatrix4dv(uniform(name), 1, GL_FALSE, value_ptr(m));
+void ShaderProgram::SetUniform(const std::string &name, const dmat4 &m) {
+  glUniformMatrix4dv(Uniform(name), 1, GL_FALSE, value_ptr(m));
 }
 
-void ShaderProgram::setUniform(const std::string &name, const mat4 &m) {
-  glUniformMatrix4fv(uniform(name), 1, GL_FALSE, value_ptr(m));
+void ShaderProgram::SetUniform(const std::string &name, const mat4 &m) {
+  glUniformMatrix4fv(Uniform(name), 1, GL_FALSE, value_ptr(m));
 }
 
-void ShaderProgram::setUniform(const std::string &name, const mat3 &m) {
-  glUniformMatrix3fv(uniform(name), 1, GL_FALSE, value_ptr(m));
+void ShaderProgram::SetUniform(const std::string &name, const mat3 &m) {
+  glUniformMatrix3fv(Uniform(name), 1, GL_FALSE, value_ptr(m));
 }
 
-void ShaderProgram::setUniform(const std::string &name, float val) {
-  glUniform1f(uniform(name), val);
+void ShaderProgram::SetUniform(const std::string &name, float val) {
+  glUniform1f(Uniform(name), val);
 }
 
-void ShaderProgram::setUniform(const std::string &name, int val) {
-  glUniform1i(uniform(name), val);
+void ShaderProgram::SetUniform(const std::string &name, int val) {
+  glUniform1i(Uniform(name), val);
 }
 
 ShaderProgram::~ShaderProgram() {
   // glDeleteProgram(handle);
 }
 
-void ShaderProgram::use() const { glUseProgram(handle); }
-void ShaderProgram::unuse() { glUseProgram(0); }
+void ShaderProgram::Use() const { glUseProgram(handle); }
+void ShaderProgram::Unuse() { glUseProgram(0); }
 
-GLuint ShaderProgram::getHandle() const { return handle; }
+GLuint ShaderProgram::GetHandle() const { return handle; }
 
 GLint ShaderProgram::operator[](const string &name) { return 0; }

@@ -1,4 +1,4 @@
-#include "ApplicationCore.hpp"
+#include "application_core.hpp"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -22,8 +22,8 @@ ApplicationCore::ApplicationCore()
   currentApplication = this;
 
   time = 0.0;
-  deltaTime = 0.0;
-  dimensionChanged = false;
+  delta_time = 0.0;
+  dimension_changed = false;
 
   cout << "[Info]: GLFW initialisation" << endl;
 
@@ -84,15 +84,15 @@ ApplicationCore::ApplicationCore()
   // glfwSwapInterval(false);
 }
 
-GLFWwindow *ApplicationCore::getWindow() const { return window; }
+GLFWwindow *ApplicationCore::GetWindow() const { return window; }
 
-void ApplicationCore::exit() { state = stateExit; }
+void ApplicationCore::Exit() { state = stateExit; }
 
-float ApplicationCore::getFrameDeltaTime() const { return deltaTime; }
+float ApplicationCore::GetFrameDeltaTime() const { return delta_time; }
 
-float ApplicationCore::getTime() const { return time; }
+float ApplicationCore::GetTime() const { return time; }
 
-void ApplicationCore::run() {
+void ApplicationCore::Run() {
   state = stateRun;
 
   // Make the window's context current
@@ -103,14 +103,14 @@ void ApplicationCore::run() {
   while (state == stateRun) {
     // compute new time and delta time
     auto t = (float) glfwGetTime();
-    deltaTime = t - time;
+    delta_time = t - time;
     time = t;
 
     // detech window related changes
-    detectWindowDimensionChange();
+    DetectWindowDimensionChange();
 
     // execute the frame code
-    loop();
+    Loop();
 
     // Swap Front and Back buffers (double buffering)
     glfwSwapBuffers(window);
@@ -122,18 +122,18 @@ void ApplicationCore::run() {
   glfwTerminate();
 }
 
-void ApplicationCore::detectWindowDimensionChange() {
+void ApplicationCore::DetectWindowDimensionChange() {
   int w, h;
-  glfwGetWindowSize(getWindow(), &w, &h);
-  dimensionChanged = (w != width or h != height);
-  if (dimensionChanged) {
+  glfwGetWindowSize(GetWindow(), &w, &h);
+  dimension_changed = (w != width or h != height);
+  if (dimension_changed) {
     width = w;
     height = h;
     glViewport(0, 0, width, height);
   }
 }
 
-void ApplicationCore::loop() {
+void ApplicationCore::Loop() {
   cout << "[INFO]: Run loop\n";
 }
 
@@ -141,10 +141,10 @@ int ApplicationCore::getWidth() const { return width; }
 
 int ApplicationCore::getHeight() const { return height; }
 
-float ApplicationCore::getWindowRatio() const {
+float ApplicationCore::GetWindowRatio() const {
   return float(width) / float(height);
 }
 
 bool ApplicationCore::windowDimensionChanged() const {
-  return dimensionChanged;
+  return dimension_changed;
 }

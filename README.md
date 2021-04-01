@@ -1,5 +1,8 @@
 # Just some graphics
 
+### Coding standard:
+https://google.github.io/styleguide/cppguide.html
+
 ### Compiles on:
  * Linux
  * Windows

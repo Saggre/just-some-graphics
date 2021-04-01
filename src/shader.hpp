@@ -1,5 +1,5 @@
-#ifndef OPENGL_CMAKE_SKELETON_SHADER_HPP
-#define OPENGL_CMAKE_SKELETON_SHADER_HPP
+#ifndef JUST_SOME_GRAPHICS_SRC_SHADER_HPP
+#define JUST_SOME_GRAPHICS_SRC_SHADER_HPP
 
 #define GLM_FORCE_RADIANS
 #include <GL/glew.h>
@@ -20,7 +20,7 @@ class Shader {
    */
   Shader(const std::string &filename, GLenum type);
 
-  GLuint getHandle() const;
+  GLuint GetHandle() const;
 
   ~Shader();
 
@@ -42,45 +42,45 @@ class ShaderProgram {
   /**
    * Bind the program
    */
-  void use() const;
+  void Use() const;
 
   /**
    * Unbind the program
    */
-  static void unuse();
+  static void Unuse();
 
   /**
    * Get handle
    * @return
    */
-  GLuint getHandle() const;
+  GLuint GetHandle() const;
 
   // Provide attribute information
-  GLint attribute(const std::string &name) const;
-  void setAttribute(const std::string &name, GLint size, GLsizei stride,
+  GLint Attribute(const std::string &name) const;
+  void SetAttribute(const std::string &name, GLint size, GLsizei stride,
                     GLuint offset, GLboolean normalize, GLenum type) const;
-  void setAttribute(const std::string &name, GLint size, GLsizei stride,
+  void SetAttribute(const std::string &name, GLint size, GLsizei stride,
                     GLuint offset, GLboolean normalize) const;
-  void setAttribute(const std::string &name, GLint size, GLsizei stride,
+  void SetAttribute(const std::string &name, GLint size, GLsizei stride,
                     GLuint offset, GLenum type) const;
-  void setAttribute(const std::string &name, GLint size, GLsizei stride,
+  void SetAttribute(const std::string &name, GLint size, GLsizei stride,
                     GLuint offset) const;
 
   // Provide uniform location
-  GLint uniform(const std::string &name);
+  GLint Uniform(const std::string &name);
   GLint operator[](const std::string &name);
 
   // Affect uniform
-  void setUniform(const std::string &name, float x, float y, float z);
-  void setUniform(const std::string &name, const glm::vec3 &v);
-  void setUniform(const std::string &name, const glm::dvec3 &v);
-  void setUniform(const std::string &name, const glm::vec4 &v);
-  void setUniform(const std::string &name, const glm::dvec4 &v);
-  void setUniform(const std::string &name, const glm::dmat4 &m);
-  void setUniform(const std::string &name, const glm::mat4 &m);
-  void setUniform(const std::string &name, const glm::mat3 &m);
-  void setUniform(const std::string &name, float val);
-  void setUniform(const std::string &name, int val);
+  void SetUniform(const std::string &name, float x, float y, float z);
+  void SetUniform(const std::string &name, const glm::vec3 &v);
+  void SetUniform(const std::string &name, const glm::dvec3 &v);
+  void SetUniform(const std::string &name, const glm::vec4 &v);
+  void SetUniform(const std::string &name, const glm::dvec4 &v);
+  void SetUniform(const std::string &name, const glm::dmat4 &m);
+  void SetUniform(const std::string &name, const glm::mat4 &m);
+  void SetUniform(const std::string &name, const glm::mat3 &m);
+  void SetUniform(const std::string &name, float val);
+  void SetUniform(const std::string &name, int val);
 
   ~ShaderProgram();
 
@@ -95,7 +95,7 @@ class ShaderProgram {
    */
   GLuint handle;
 
-  void link() const;
+  void GetFileContents() const;
 };
 
 #endif

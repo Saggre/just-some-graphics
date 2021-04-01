@@ -1,5 +1,5 @@
-#ifndef OPENGL_CMAKE_SKELETON_APPLICATION_HPP
-#define OPENGL_CMAKE_SKELETON_APPLICATION_HPP
+#ifndef JUST_SOME_GRAPHICS_SRC_APPLICATION_CORE_HPP
+#define JUST_SOME_GRAPHICS_SRC_APPLICATION_CORE_HPP
 
 #include <string>
 
@@ -15,29 +15,29 @@ class ApplicationCore {
    * Get window id
    * @return
    */
-  GLFWwindow *getWindow() const;
+  GLFWwindow *GetWindow() const;
 
   /**
    * Close window
    */
-  void exit();
+  void Exit();
 
   /**
    * Get delta time between frame and time from beginning
    * @return
    */
-  float getFrameDeltaTime() const;
+  float GetFrameDeltaTime() const;
 
   /**
    * Get current running time
    * @return
    */
-  float getTime() const;
+  float GetTime() const;
 
   /**
    * Run application
    */
-  void run();
+  void Run();
 
   /**
    * Get window width in pixels
@@ -55,7 +55,7 @@ class ApplicationCore {
    * Get window aspect ratio
    * @return
    */
-  float getWindowRatio() const;
+  float GetWindowRatio() const;
 
   bool windowDimensionChanged() const;
 
@@ -69,19 +69,19 @@ class ApplicationCore {
   GLFWwindow *window;
 
   float time;
-  float deltaTime;
+  float delta_time;
 
   int width;
   int height;
-  bool dimensionChanged;
-  void detectWindowDimensionChange();
+  bool dimension_changed;
+  void DetectWindowDimensionChange();
 
  protected:
   // ApplicationCore(const ApplicationCore &);
 
   std::string title;
 
-  virtual void loop();
+  virtual void Loop();
 };
 
 #endif

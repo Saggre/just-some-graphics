@@ -1,4 +1,4 @@
-#include "glError.hpp"
+#include "gl_error.hpp"
 
 #include <GL/glew.h>
 #include <iostream>
@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void glCheckError(const char *file, unsigned int line) {
+void GLCheckError(const char *file, unsigned int line) {
   GLenum errorCode = glGetError();
 
   while (errorCode != GL_NO_ERROR) {

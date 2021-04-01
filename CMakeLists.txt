@@ -6,21 +6,21 @@ set(SHADERS_SOURCE_DIR "${PROJECT_SOURCE_DIR}/shader")
 
 add_custom_target(
         embed_shader
-        COMMAND bash ${PROJECT_SOURCE_DIR}/embed.sh ${PROJECT_SOURCE_DIR}/src/EmbedShader.hpp ${SHADERS_SOURCE_DIR}
+        COMMAND bash ${PROJECT_SOURCE_DIR}/embed.sh ${PROJECT_SOURCE_DIR}/src/embed_shader.hpp ${SHADERS_SOURCE_DIR}
 )
 
 # The main executable
 add_executable(main
-        src/ApplicationCore.cpp
-        src/ApplicationCore.cpp
-        src/Application.cpp
-        src/Application.cpp
-        src/glError.hpp
-        src/glError.cpp
+        src/application_core.cpp
+        src/application_core.cpp
+        src/application.cpp
+        src/application.cpp
+        src/gl_error.hpp
+        src/gl_error.cpp
         src/main.cpp
-        src/Shader.hpp
-        src/Shader.cpp
-        )
+        src/shader.hpp
+        src/shader.cpp
+        src/abstract_updatable.hpp)
 
 add_dependencies(main embed_shader)
 
