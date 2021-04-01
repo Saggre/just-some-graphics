@@ -1,7 +1,9 @@
+//
+// Created by Sakri Koskimies on 4/2/21.
+//
+
 #ifndef JUST_SOME_GRAPHICS_SRC_ABSTRACTUPDATABLE_HPP_
 #define JUST_SOME_GRAPHICS_SRC_ABSTRACTUPDATABLE_HPP_
-
-#endif //JUST_SOME_GRAPHICS_SRC_ABSTRACTUPDATABLE_HPP_
 
 /**
  * Base class for all entities that are continuously updated
@@ -23,3 +25,5 @@ class AbstractUpdatable {
    */
   virtual void End() = 0;
 };
+
+#endif //JUST_SOME_GRAPHICS_SRC_ABSTRACTUPDATABLE_HPP_

@@ -4,6 +4,9 @@
 #include "application_core.hpp"
 #include "shader.hpp"
 
+#include <mathfu/matrix.h>
+#include <mathfu/glsl_mappings.h>
+
 class Application : public ApplicationCore {
  public:
   Application();
@@ -19,8 +22,8 @@ class Application : public ApplicationCore {
   Shader fragment_shader;
   ShaderProgram shader_program;
 
-  glm::mat4 projection = glm::mat4(1.0);
-  glm::mat4 view = glm::mat4(1.0);
+  mathfu::mat4 projection = mathfu::mat4::Identity();
+  mathfu::mat4 view = mathfu::mat4::Identity();
 
   GLuint vao, vbo, ibo;
 };

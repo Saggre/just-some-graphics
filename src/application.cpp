@@ -1,9 +1,9 @@
 #include "application.hpp"
 
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/matrix_operation.hpp>
+#include <mathfu/vector.h>
+#include <mathfu/matrix.h>
+#include <mathfu/glsl_mappings.h>
 #include <iostream>
 #include <vector>
 
@@ -12,29 +12,29 @@
 #define SHADER_DIR "../shader/"
 
 struct VertexType {
-  glm::vec3 position;
-  glm::vec3 normal;
-  glm::vec4 color;
+  mathfu::vec3 position;
+  mathfu::vec3 normal;
+  mathfu::vec4 color;
 };
 
-float HeightMap(const glm::vec2 position) {
+float HeightMap(const mathfu::vec2& position) {
   return 2.0 * sin(position.x) * sin(position.y);
 }
 
-VertexType GetHeightMap(const glm::vec2 position) {
-  const glm::vec2 dx(1.0, 0.0);
-  const glm::vec2 dy(0.0, 1.0);
+VertexType GetHeightMap(const mathfu::vec2& position) {
+  const mathfu::vec2 dx(1.0, 0.0);
+  const mathfu::vec2 dy(0.0, 1.0);
 
   VertexType v;
   float h = HeightMap(position);
   float hx = 100.f * (HeightMap(position + 0.01f * dx) - h);
   float hy = 100.f * (HeightMap(position + 0.01f * dy) - h);
 
-  v.position = glm::vec3(position, h);
-  v.normal = glm::normalize(glm::vec3(-hx, -hy, 1.0));
+  v.position = mathfu::vec3(position, h);
+  v.normal = mathfu::normalize(mathfu::vec3(-hx, -hy, 1.0));
 
   float c = sin(h * 5.f) * 0.5 + 0.5;
-  v.color = glm::vec4(c, 1.0 - c, 1.0, 1.0);
+  v.color = mathfu::vec4(c, 1.0 - c, 1.0, 1.0);
   return v;
 }
 
@@ -122,10 +122,17 @@ void Application::Loop() {
 
   float t = GetTime();
   // set matrix : projection + view
-  projection = glm::perspective(float(2.0 * atan(getHeight() / 1920.f)),
-                                GetWindowRatio(), 0.1f, 100.f);
-  view = glm::lookAt(glm::vec3(20.0 * sin(t), 20.0 * cos(t), 20.0),
-                     glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 1.0));
+  projection = mathfu::mat4::Perspective(
+      float(2.0 * atan(getHeight() / 1920.f)),
+      GetWindowRatio(), 0.1f, 100.f
+  );
+
+  view = mathfu::mat4::LookAt(
+      mathfu::vec3(0.0, 0.0, 0.0),
+      mathfu::vec3(20.0 * sin(t), 20.0 * cos(t), 20.0),
+      mathfu::vec3(0.0, 0.0, 1.0),
+      1
+  );
 
   // clear
   glClear(GL_COLOR_BUFFER_BIT);

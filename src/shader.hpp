@@ -1,12 +1,14 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_SHADER_HPP
 #define JUST_SOME_GRAPHICS_SRC_SHADER_HPP
 
-#define GLM_FORCE_RADIANS
 #include <GL/glew.h>
-#include <glm/glm.hpp>
 #include <initializer_list>
 #include <map>
 #include <string>
+#include <mathfu/vector.h>
+#include <mathfu/quaternion.h>
+#include <mathfu/matrix.h>
+#include <mathfu/glsl_mappings.h>
 
 class Shader;
 class ShaderProgram;
@@ -31,9 +33,7 @@ class Shader {
 };
 
 /**
- * A shader program is a set of shader (for instance vertex shader + pixel
- * shader) defining the rendering pipeline. This class provide an interface to
- * define the OpenGL uniforms and attributes using GLM objects.
+ * A shader program is a set of shader (for instance vertex shader + pixel shader)
  */
 class ShaderProgram {
  public:
@@ -72,13 +72,10 @@ class ShaderProgram {
 
   // Affect uniform
   void SetUniform(const std::string &name, float x, float y, float z);
-  void SetUniform(const std::string &name, const glm::vec3 &v);
-  void SetUniform(const std::string &name, const glm::dvec3 &v);
-  void SetUniform(const std::string &name, const glm::vec4 &v);
-  void SetUniform(const std::string &name, const glm::dvec4 &v);
-  void SetUniform(const std::string &name, const glm::dmat4 &m);
-  void SetUniform(const std::string &name, const glm::mat4 &m);
-  void SetUniform(const std::string &name, const glm::mat3 &m);
+  void SetUniform(const std::string &name, const mathfu::vec3 &v);
+  void SetUniform(const std::string &name, const mathfu::vec4 &v);
+  void SetUniform(const std::string &name, const mathfu::mat4 &m);
+  void SetUniform(const std::string &name, const mathfu::mat3 &m);
   void SetUniform(const std::string &name, float val);
   void SetUniform(const std::string &name, int val);
 

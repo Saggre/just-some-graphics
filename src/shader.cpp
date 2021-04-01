@@ -2,13 +2,12 @@
 
 #include <cstdlib>
 #include <fstream>
-#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
 
 using namespace std;
-using namespace glm;
+using namespace mathfu;
 
 // file reading
 void GetFileContents(const char *filename, vector<char> &buffer) {
@@ -155,31 +154,19 @@ void ShaderProgram::SetUniform(
 }
 
 void ShaderProgram::SetUniform(const std::string &name, const vec3 &v) {
-  glUniform3fv(Uniform(name), 1, value_ptr(v));
-}
-
-void ShaderProgram::SetUniform(const std::string &name, const dvec3 &v) {
-  glUniform3dv(Uniform(name), 1, value_ptr(v));
+  glUniform3fv(Uniform(name), 1, &v[0]);
 }
 
 void ShaderProgram::SetUniform(const std::string &name, const vec4 &v) {
-  glUniform4fv(Uniform(name), 1, value_ptr(v));
-}
-
-void ShaderProgram::SetUniform(const std::string &name, const dvec4 &v) {
-  glUniform4dv(Uniform(name), 1, value_ptr(v));
-}
-
-void ShaderProgram::SetUniform(const std::string &name, const dmat4 &m) {
-  glUniformMatrix4dv(Uniform(name), 1, GL_FALSE, value_ptr(m));
+  glUniform4fv(Uniform(name), 1, &v[0]);
 }
 
 void ShaderProgram::SetUniform(const std::string &name, const mat4 &m) {
-  glUniformMatrix4fv(Uniform(name), 1, GL_FALSE, value_ptr(m));
+  glUniformMatrix4fv(Uniform(name), 1, GL_FALSE, &m[0]);
 }
 
 void ShaderProgram::SetUniform(const std::string &name, const mat3 &m) {
-  glUniformMatrix3fv(Uniform(name), 1, GL_FALSE, value_ptr(m));
+  glUniformMatrix3fv(Uniform(name), 1, GL_FALSE, &m[0]);
 }
 
 void ShaderProgram::SetUniform(const std::string &name, float val) {

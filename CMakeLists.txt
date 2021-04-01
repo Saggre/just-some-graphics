@@ -20,7 +20,7 @@ add_executable(main
         src/main.cpp
         src/shader.hpp
         src/shader.cpp
-        src/abstract_updatable.hpp)
+        src/abstract_updatable.hpp src/entity.hpp src/camera/camera.hpp src/camera/creative_camera.hpp src/transform.hpp)
 
 add_dependencies(main embed_shader)
 
@@ -39,3 +39,10 @@ target_link_libraries(main PRIVATE libglew_static)
 # glm
 add_subdirectory(lib/glm EXCLUDE_FROM_ALL)
 target_link_libraries(main PRIVATE glm)
+
+# Include MathFu in this project with test and benchmark builds disabled
+# then add MathFu compiler flags to the mygame build target.
+set(mathfu_build_benchmarks OFF CACHE BOOL "")
+set(mathfu_build_tests OFF CACHE BOOL "")
+add_subdirectory(lib/mathfu mathfu)
+mathfu_configure_flags(main)
