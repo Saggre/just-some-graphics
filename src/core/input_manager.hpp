@@ -10,6 +10,7 @@
 #include <iostream>
 #include <bitset>
 #include <map>
+#include <mathfu/vector.h>
 
 #include "abstract_updatable.hpp"
 #include "multi_frame_data.hpp"
@@ -70,6 +71,12 @@ class InputManager {
   }
 
   void Update() {
+    // Update mouse pos
+    auto mouse_pos = mathfu::Vector<double, 2>();
+    glfwGetCursorPos(window_, &mouse_pos.x, &mouse_pos.y);
+    mouse_pos_.Update(mouse_pos);
+
+    // Update keyboard bitset
     keys_last_frame_ = keys_;
 
     for (int key : all_keys) {
@@ -80,9 +87,13 @@ class InputManager {
         keys_.set(key, false);
       }
     }
+
+    std::cout << std::to_string( mouse_pos_.GetDelta().x) << "\n";
+
   }
 
  private:
+  inline static MultiFrameData<mathfu::Vector<double, 2>> mouse_pos_;
   inline static PressedKeyMap keys_;
   inline static PressedKeyMap keys_last_frame_;
   GLFWwindow *window_;

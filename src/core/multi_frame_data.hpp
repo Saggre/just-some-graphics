@@ -14,40 +14,69 @@ class MultiFrameData {
  public:
   typedef T (*DeltaCalc)(T current, T last);
 
-  T GetCurrent() const {
-    return current_frame;
-  }
-
-  T GetLast() const {
-    return last_frame;
-  }
-
-  T GetDelta() const {
-    return delta;
-  }
-
-  explicit MultiFrameData(DeltaCalc delta_calc = DefaultDeltaCalc) {
-    delta_calc_ = delta_calc;
-    current_frame = T();
+  /**
+   * Constructor
+   */
+  MultiFrameData() {
+    current_frame_ = T();
     Update(T());
   }
 
+  /**
+   * Provide a custom delta calculation formula
+   * @param delta_calc
+   */
+  explicit MultiFrameData(DeltaCalc delta_calc) {
+    delta_calc_ = delta_calc;
+    current_frame_ = T();
+    Update(T());
+  }
+
+  /**
+   * Get current-frame value
+   * @return
+   */
+  T GetCurrent() const {
+    return current_frame_;
+  }
+
+  /**
+   * Get last-frame value
+   * @return
+   */
+  T GetLast() const {
+    return last_frame_;
+  }
+
+  /**
+   * Get current-last frame delta
+   * @return
+   */
+  T GetDelta() const {
+    return delta_;
+  }
+
+  /**
+   * Update with a new value. Should be called on every reference frame
+   * @param new_frame
+   */
   void Update(T new_frame) {
-    last_frame = current_frame;
-    current_frame = new_frame;
-    delta = delta_calc_(current_frame, last_frame);
+    last_frame_ = current_frame_;
+    current_frame_ = new_frame;
+    delta_ = delta_calc_(current_frame_, last_frame_);
   }
 
  protected:
-  DeltaCalc delta_calc_;
-  T current_frame;
-  T last_frame;
-  T delta;
-
- private:
-  static inline T DefaultDeltaCalc(T current, T last) {
+  /**
+   * Default delta calculation formula
+   */
+  DeltaCalc delta_calc_ = [](T current, T last) {
     return current - last;
-  }
+  };
+
+  T current_frame_;
+  T last_frame_;
+  T delta_;
 };
 
 #endif //JUST_SOME_GRAPHICS_SRC_CORE_MULTI_FRAME_DATA_HPP_
