@@ -7,3 +7,6 @@
 [submodule "lib/glew"]
 	path = lib/glew
 	url = git@github.com:Perlmint/glew-cmake.git
+[submodule "lib/gainput"]
+	path = lib/gainput
+	url = git@github.com:jkuhlmann/gainput.git

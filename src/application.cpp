@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#include "gl_error.hpp"
+#include "src/core/gl_error.hpp"
 
 #define SHADER_DIR "../shader/"
 

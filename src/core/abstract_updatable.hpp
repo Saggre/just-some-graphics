@@ -6,7 +6,7 @@
 #define JUST_SOME_GRAPHICS_SRC_ABSTRACTUPDATABLE_HPP_
 
 /**
- * Base class for all entities that are continuously updated
+ * Base class for all objects that are continuously updated
  */
 class AbstractUpdatable {
  public:

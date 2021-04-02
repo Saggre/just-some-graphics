@@ -1,8 +1,8 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_APPLICATION_HPP
 #define JUST_SOME_GRAPHICS_SRC_APPLICATION_HPP
 
-#include "application_core.hpp"
-#include "shader.hpp"
+#include "src/core/application_core.hpp"
+#include "src/core/shader.hpp"
 
 #include <mathfu/matrix.h>
 #include <mathfu/glsl_mappings.h>

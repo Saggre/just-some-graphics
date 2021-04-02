@@ -5,7 +5,7 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_ENTITY_HPP_
 #define JUST_SOME_GRAPHICS_SRC_ENTITY_HPP_
 
-#include "abstract_updatable.hpp"
+#include "src/core/abstract_updatable.hpp"
 #include "transform.hpp"
 
 /**

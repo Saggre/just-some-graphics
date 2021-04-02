@@ -5,7 +5,7 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_CAMERA_HPP_
 #define JUST_SOME_GRAPHICS_SRC_CAMERA_HPP_
 
-#include "../entity.hpp"
+#include "src/core/entity.hpp"
 
 /**
  * Camera base class

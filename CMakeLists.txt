@@ -2,6 +2,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(just-some-graphics)
 
+set(CMAKE_CXX_STANDARD 17)
 set(SHADERS_SOURCE_DIR "${PROJECT_SOURCE_DIR}/shader")
 
 add_custom_target(
@@ -11,16 +12,16 @@ add_custom_target(
 
 # The main executable
 add_executable(main
-        src/application_core.cpp
-        src/application_core.cpp
-        src/application.cpp
-        src/application.cpp
-        src/gl_error.hpp
-        src/gl_error.cpp
         src/main.cpp
-        src/shader.hpp
-        src/shader.cpp
-        src/abstract_updatable.hpp src/entity.hpp src/camera/camera.hpp src/camera/creative_camera.hpp src/transform.hpp)
+        src/application.cpp
+        src/application.cpp
+        src/core/application_core.cpp
+        src/core/application_core.cpp
+        src/core/gl_error.hpp
+        src/core/gl_error.cpp
+        src/core/shader.hpp
+        src/core/shader.cpp
+        src/core/abstract_updatable.hpp src/core/entity.hpp src/camera/camera.hpp src/camera/creative_camera.hpp src/core/transform.hpp src/core/input_manager.hpp src/core/multi_frame_data.hpp)
 
 add_dependencies(main embed_shader)
 
@@ -39,6 +40,11 @@ target_link_libraries(main PRIVATE libglew_static)
 # glm
 add_subdirectory(lib/glm EXCLUDE_FROM_ALL)
 target_link_libraries(main PRIVATE glm)
+
+# SDL2
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+target_link_libraries(main PRIVATE SDL2)
 
 # Include MathFu in this project with test and benchmark builds disabled
 # then add MathFu compiler flags to the mygame build target.

@@ -38,6 +38,11 @@ ApplicationCore::ApplicationCore()
   width = vidMode->width;
   height = vidMode->height;
 
+  if (!fullscreen) {
+    width = 1000;
+    height = 600;
+  }
+
   // setting the opengl version
   int major = 4;
   int minor = 1;
@@ -47,17 +52,13 @@ ApplicationCore::ApplicationCore()
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // create the window
-  window = glfwCreateWindow(width, height, title.c_str(), monitor, nullptr);
+  window = glfwCreateWindow(width, height, title.c_str(), fullscreen ? monitor : nullptr, nullptr);
+  input_manager.Init(window);
+
   if (!window) {
     glfwTerminate();
     throw std::runtime_error("Couldn't create a window");
   }
-
-  glfwSetKeyCallback(window, [](GLFWwindow *win, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-      glfwSetWindowShouldClose(win, GLFW_TRUE);
-    }
-  });
 
   glfwMakeContextCurrent(window);
 
@@ -83,6 +84,7 @@ ApplicationCore::ApplicationCore()
   // vsync
   // glfwSwapInterval(false);
 }
+#pragma clang diagnostic pop
 
 GLFWwindow *ApplicationCore::GetWindow() const { return window; }
 
@@ -134,7 +136,15 @@ void ApplicationCore::DetectWindowDimensionChange() {
 }
 
 void ApplicationCore::Loop() {
-  cout << "[INFO]: Run loop\n";
+  input_manager.Update();
+
+  if (InputManager::IsKeyDown(InputManager::Down)) {
+    std::cout << "Keypress\n";
+  }
+
+  if (InputManager::IsKeyDown(InputManager::Esc)) {
+    glfwSetWindowShouldClose(window, GLFW_TRUE);
+  }
 }
 
 int ApplicationCore::getWidth() const { return width; }

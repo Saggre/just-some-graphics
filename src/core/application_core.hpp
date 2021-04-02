@@ -1,6 +1,8 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_APPLICATION_CORE_HPP
 #define JUST_SOME_GRAPHICS_SRC_APPLICATION_CORE_HPP
 
+#include "input_manager.hpp"
+
 #include <string>
 
 struct GLFWwindow;
@@ -79,7 +81,9 @@ class ApplicationCore {
  protected:
   // ApplicationCore(const ApplicationCore &);
 
+  InputManager input_manager;
   std::string title;
+  bool fullscreen = false;
 
   virtual void Loop();
 };
