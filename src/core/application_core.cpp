@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 
 using namespace std;
 
@@ -61,7 +62,7 @@ ApplicationCore::ApplicationCore()
   }
 
   glfwMakeContextCurrent(window);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
   if (glfwRawMouseMotionSupported()) {
     glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -140,8 +141,17 @@ void ApplicationCore::DetectWindowDimensionChange() {
   }
 }
 
+void ApplicationCore::AddEntity(AbstractUpdatable *entity) {
+  entities_.push_back(entity);
+}
+
 void ApplicationCore::Loop() {
   input_manager.Update();
+
+  // Reference to a pointer
+  for (auto &entity : entities_) {
+    entity->Update();
+  }
 
   if (InputManager::IsKeyDown(InputManager::Down)) {
     std::cout << "Keypress\n";

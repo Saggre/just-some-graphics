@@ -3,6 +3,8 @@
 
 #include "src/core/application_core.hpp"
 #include "src/core/shader.hpp"
+#include "src/core/entity.hpp"
+#include "src/core/components/mesh.hpp"
 
 #include <mathfu/matrix.h>
 #include <mathfu/glsl_mappings.h>
@@ -10,13 +12,12 @@
 class Application : public ApplicationCore {
  public:
   Application();
-
+  ~Application();
  protected:
   void Loop() override;
 
  private:
   float time = 0.f;
-  const int size = 100;
 
   Shader vertex_shader;
   Shader fragment_shader;
@@ -26,6 +27,10 @@ class Application : public ApplicationCore {
   mathfu::mat4 view = mathfu::mat4::Identity();
 
   GLuint vao, vbo, ibo;
+
+  // Test
+  Entity entity;
+  Mesh mesh;
 };
 
 #endif

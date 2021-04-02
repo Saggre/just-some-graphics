@@ -21,7 +21,8 @@ add_executable(main
         src/core/gl_error.cpp
         src/core/shader.hpp
         src/core/shader.cpp
-        src/core/abstract_updatable.hpp src/core/entity.hpp src/camera/camera.hpp src/camera/creative_camera.hpp src/core/transform.hpp src/core/input_manager.hpp src/core/multi_frame_data.hpp)
+        src/core/entity.hpp
+        src/core/abstract_updatable.hpp src/camera/camera.hpp src/camera/creative_camera.hpp src/core/components/transform.hpp src/core/input_manager.hpp src/core/multi_frame_data.hpp src/core/components/component.hpp src/core/components/mesh.hpp)
 
 add_dependencies(main embed_shader)
 

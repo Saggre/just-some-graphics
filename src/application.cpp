@@ -8,35 +8,10 @@
 #include <vector>
 
 #include "src/core/gl_error.hpp"
+#include "src/core/entity.hpp"
+#include "src/core/components/mesh.hpp"
 
 #define SHADER_DIR "../shader/"
-
-struct VertexType {
-  mathfu::vec3 position;
-  mathfu::vec3 normal;
-  mathfu::vec4 color;
-};
-
-float HeightMap(const mathfu::vec2& position) {
-  return 2.0 * sin(position.x) * sin(position.y);
-}
-
-VertexType GetHeightMap(const mathfu::vec2& position) {
-  const mathfu::vec2 dx(1.0, 0.0);
-  const mathfu::vec2 dy(0.0, 1.0);
-
-  VertexType v;
-  float h = HeightMap(position);
-  float hx = 100.f * (HeightMap(position + 0.01f * dx) - h);
-  float hy = 100.f * (HeightMap(position + 0.01f * dy) - h);
-
-  v.position = mathfu::vec3(position, h);
-  v.normal = mathfu::normalize(mathfu::vec3(-hx, -hy, 1.0));
-
-  float c = sin(h * 5.f) * 0.5 + 0.5;
-  v.color = mathfu::vec4(c, 1.0 - c, 1.0, 1.0);
-  return v;
-}
 
 Application::Application() :
     ApplicationCore(),
@@ -45,32 +20,14 @@ Application::Application() :
     shader_program({vertex_shader, fragment_shader}) {
   GLCheckError(__FILE__, __LINE__);
 
-  // creation of the mesh ------------------------------------------------------
-  std::vector<VertexType> vertices;
-  std::vector<GLuint> index;
-
-  for (int y = 0; y <= size; ++y)
-    for (int x = 0; x <= size; ++x) {
-      float xx = (x - size / 2) * 0.1f;
-      float yy = (y - size / 2) * 0.1f;
-      vertices.push_back(GetHeightMap({xx, yy}));
-    }
-
-  for (int y = 0; y < size; ++y)
-    for (int x = 0; x < size; ++x) {
-      index.push_back((x + 0) + (size + 1) * (y + 0));
-      index.push_back((x + 1) + (size + 1) * (y + 0));
-      index.push_back((x + 1) + (size + 1) * (y + 1));
-
-      index.push_back((x + 1) + (size + 1) * (y + 1));
-      index.push_back((x + 0) + (size + 1) * (y + 1));
-      index.push_back((x + 0) + (size + 1) * (y + 0));
-    }
-
-  std::cout << "vertices=" << vertices.size() << std::endl;
-  std::cout << "index=" << index.size() << std::endl;
+  // Test
+  entity.AddComponent(&mesh);
+  entity.Start();
 
   // creation of the vertex array buffer----------------------------------------
+
+  auto indices = mesh.GetIndices();
+  auto vertices = mesh.GetVertices();
 
   vao = -1;
   vbo = -1;
@@ -79,15 +36,15 @@ Application::Application() :
   // vbo
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(VertexType),
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Mesh::Vertex),
                vertices.data(), GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   // ibo
   glGenBuffers(1, &ibo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, index.size() * sizeof(GLuint),
-               index.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint),
+               indices.data(), GL_STATIC_DRAW);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
   // vao
@@ -98,12 +55,12 @@ Application::Application() :
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
   // map vbo to shader attributes
-  shader_program.SetAttribute("position", 3, sizeof(VertexType),
-                              offsetof(VertexType, position));
-  shader_program.SetAttribute("normal", 3, sizeof(VertexType),
-                              offsetof(VertexType, normal));
-  shader_program.SetAttribute("color", 4, sizeof(VertexType),
-                              offsetof(VertexType, color));
+  shader_program.SetAttribute("position", 3, sizeof(Mesh::Vertex),
+                              offsetof(Mesh::Vertex, position));
+  shader_program.SetAttribute("normal", 3, sizeof(Mesh::Vertex),
+                              offsetof(Mesh::Vertex, normal));
+  shader_program.SetAttribute("color", 4, sizeof(Mesh::Vertex),
+                              offsetof(Mesh::Vertex, color));
 
   // bind the ibo
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -154,7 +111,7 @@ void Application::Loop() {
 
   GLCheckError(__FILE__, __LINE__);
   glDrawElements(GL_TRIANGLES,        // mode
-                 size * size * 2 * 3, // count
+                 100 * 100 * 2 * 3, // count
                  GL_UNSIGNED_INT,     // type
                  nullptr                 // element array buffer offset
   );
@@ -163,3 +120,8 @@ void Application::Loop() {
 
   ShaderProgram::Unuse();
 }
+
+Application::~Application() {
+
+}
+

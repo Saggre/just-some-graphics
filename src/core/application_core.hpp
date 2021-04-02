@@ -2,8 +2,11 @@
 #define JUST_SOME_GRAPHICS_SRC_APPLICATION_CORE_HPP
 
 #include "input_manager.hpp"
+#include "abstract_updatable.hpp"
 
 #include <string>
+#include <iostream>
+#include <vector>
 
 struct GLFWwindow;
 
@@ -59,6 +62,8 @@ class ApplicationCore {
    */
   float GetWindowRatio() const;
 
+  void AddEntity(AbstractUpdatable *entity);
+
   bool windowDimensionChanged() const;
 
  private:
@@ -69,6 +74,9 @@ class ApplicationCore {
   ApplicationCore &operator=(const ApplicationCore &) { return *this; }
 
   GLFWwindow *window;
+
+  std::vector<AbstractUpdatable *> entities_;
+  std::vector<int> test_;
 
   float time;
   float delta_time;
