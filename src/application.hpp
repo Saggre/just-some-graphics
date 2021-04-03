@@ -15,7 +15,7 @@ class Application : public ApplicationCore {
   ~Application();
  protected:
   void Loop() override;
-
+  void Start() override;
  private:
   float time = 0.f;
 

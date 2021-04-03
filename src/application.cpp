@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <future>
 #include "src/core/gl_error.hpp"
 #include "src/core/entity.hpp"
 #include "src/core/components/mesh.hpp"
@@ -70,6 +71,10 @@ Application::Application() :
   glBindVertexArray(0);
 }
 
+void Application::Start() {
+  ApplicationCore::Start();
+}
+
 void Application::Loop() {
   ApplicationCore::Loop();
 
@@ -77,7 +82,7 @@ void Application::Loop() {
   entity.Update();
 
   auto d = entity.transform_.GetPosition();
-  std::cout << std::to_string(d.x) << ", " << std::to_string(d.y) << ", " << std::to_string(d.z) << "\n";
+  //std::cout << std::to_string(d.x) << ", " << std::to_string(d.y) << ", " << std::to_string(d.z) << "\n";
 
   // exit on window close button pressed
   if (glfwWindowShouldClose(GetWindow())) {
@@ -91,6 +96,16 @@ void Application::Loop() {
       GetWindowRatio(), 0.1f, 1000.f,
       1
   );
+
+  // Dirty hack
+  projection = projection * mathfu::mat4::FromScaleVector(mathfu::vec3(-1, 1, 1));
+
+  /*float sz = 10;
+
+  projection = mathfu::mat4::Ortho(
+      sz, -sz, -sz, sz, 0.1f, 1000.f,
+      1
+  );*/
 
   view = mathfu::mat4::LookAt(
       entity.transform_.GetPosition() + entity.transform_.Forward(),

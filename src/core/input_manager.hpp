@@ -48,7 +48,11 @@ class InputManager {
    * @return
    */
   static mathfu::vec2 GetMouseDelta() {
-    return mathfu::vec2(mouse_pos_last_frame_[0] - mouse_pos_[0], mouse_pos_last_frame_[1] - mouse_pos_[1]);
+    if (!mouse_enabled_) {
+      return mathfu::vec2(0, 0);
+    }
+
+    return mathfu::vec2(mouse_pos_[0] - mouse_pos_last_frame_[0], mouse_pos_[1] - mouse_pos_last_frame_[1]);
   }
 
   /**
@@ -80,17 +84,12 @@ class InputManager {
 
   void Init(GLFWwindow *window) {
     window_ = window;
+    UpdateMouse();
+    UpdateMouse();
   }
 
   void Update() {
-    // Update mouse pos
-    mouse_pos_last_frame_[0] = mouse_pos_[0];
-    mouse_pos_last_frame_[1] = mouse_pos_[1];
-
-    double x, y;
-    glfwGetCursorPos(window_, &x, &y);
-    mouse_pos_[0] = (float) x;
-    mouse_pos_[1] = (float) y;
+    UpdateMouse();
 
     // Update keyboard bitset
     keys_last_frame_ = keys_;
@@ -105,12 +104,35 @@ class InputManager {
     }
   }
 
+  static bool IsMouseEnabled() {
+    return mouse_enabled_;
+  }
+
+  static void SetMouseEnabled(bool mouse_enabled) {
+    mouse_enabled_ = mouse_enabled;
+  }
+
  private:
+  inline static bool mouse_enabled_ = false;
   inline static float mouse_pos_[2];
   inline static float mouse_pos_last_frame_[2];
   inline static PressedKeyMap keys_;
   inline static PressedKeyMap keys_last_frame_;
   GLFWwindow *window_;
+
+  /**
+   * Calculate mouse delta
+   */
+  void UpdateMouse() {
+    double x, y;
+    glfwGetCursorPos(window_, &x, &y);
+
+    mouse_pos_last_frame_[0] = mouse_pos_[0];
+    mouse_pos_last_frame_[1] = mouse_pos_[1];
+
+    mouse_pos_[0] = (float) x;
+    mouse_pos_[1] = (float) y;
+  }
 };
 
 #endif //JUST_SOME_GRAPHICS_SRC_CORE_INPUT_MANAGER_HPP_

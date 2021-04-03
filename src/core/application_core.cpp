@@ -54,7 +54,6 @@ ApplicationCore::ApplicationCore()
 
   // create the window
   window = glfwCreateWindow(width, height, title.c_str(), fullscreen ? monitor : nullptr, nullptr);
-  input_manager.Init(window);
 
   if (!window) {
     glfwTerminate();
@@ -96,9 +95,13 @@ GLFWwindow *ApplicationCore::GetWindow() const { return window; }
 
 void ApplicationCore::Exit() { state = stateExit; }
 
-float ApplicationCore::GetFrameDeltaTime() const { return delta_time; }
+float ApplicationCore::GetTime() { return time; }
 
-float ApplicationCore::GetTime() const { return time; }
+float ApplicationCore::GetDeltaTime() { return delta_time; }
+
+void ApplicationCore::Start() {
+  input_manager.Init(window);
+}
 
 void ApplicationCore::Run() {
   state = stateRun;
@@ -107,6 +110,8 @@ void ApplicationCore::Run() {
   glfwMakeContextCurrent(window);
 
   time = (float) glfwGetTime();
+
+  Start();
 
   while (state == stateRun) {
     // compute new time and delta time
@@ -146,6 +151,11 @@ void ApplicationCore::AddEntity(AbstractUpdatable *entity) {
 }
 
 void ApplicationCore::Loop() {
+  if (!IsEngineFlag(InputEnabledOnce) && time > 0.5) {
+    InputManager::SetMouseEnabled(true);
+    SetEngineFlag(InputEnabledOnce);
+  }
+
   input_manager.Update();
 
   // Reference to a pointer
@@ -172,4 +182,12 @@ float ApplicationCore::GetWindowRatio() const {
 
 bool ApplicationCore::windowDimensionChanged() const {
   return dimension_changed;
+}
+
+bool ApplicationCore::IsEngineFlag(EngineFlag flag) {
+  return engine_flags_.test(flag);
+}
+
+void ApplicationCore::SetEngineFlag(EngineFlag flag, bool state) {
+  engine_flags_.set(flag, state);
 }

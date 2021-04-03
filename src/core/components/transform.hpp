@@ -24,12 +24,14 @@ class Transform : public Component {
 
  public:
   float speed = 0.02f;
+  // temp
+  bool use_mouse = false;
 
   Transform() {
     position = Vector3(0, 0, 0);
     rotation = Quaternion::identity;
     local_scale = Vector3(1, 1, 1);
-    mouse_rot = Vector2(0, 0);
+    mouse_rot_ = Vector2(0, 0);
   };
 
   void Start() override {
@@ -50,11 +52,15 @@ class Transform : public Component {
     }
 
     if (InputManager::IsKeyPressed(InputManager::W)) {
-      position += Forward() * speed;
+      auto dir = Forward();
+      dir.y = 0;
+      position += dir.Normalized() * speed;
     }
 
     if (InputManager::IsKeyPressed(InputManager::S)) {
-      position -= Forward() * speed;
+      auto dir = Forward();
+      dir.y = 0;
+      position -= dir.Normalized() * speed;
     }
 
     if (InputManager::IsKeyPressed(InputManager::Space)) {
@@ -69,22 +75,29 @@ class Transform : public Component {
 
     float sens = 0.003;
 
-    const float MIN_X = 0.0f;
-    const float MAX_X = M_PI * 2;
     const float MIN_Y = -M_PI * 0.5 + 0.01;
     const float MAX_Y = M_PI * 0.5 - 0.01;
 
-    mouse_rot.x += mouse.x * sens;
+    mouse_rot_[0] += mouse.y * sens;
 
-    mouse_rot.y -= mouse.y * sens;
-    if (mouse_rot.y < MIN_Y) {
-      mouse_rot.y = MIN_Y;
-    } else if (mouse_rot.y > MAX_Y) {
-      mouse_rot.y = MAX_Y;
+    if (mouse_rot_[0] < MIN_Y) {
+      mouse_rot_[0] = MIN_Y;
+    } else if (mouse_rot_[0] > MAX_Y) {
+      mouse_rot_[0] = MAX_Y;
     }
 
-    // TODO This line is fucked
-    //rotation = Quaternion::FromEulerAngles(mouse_rot.y, mouse_rot.x, 0);
+    mouse_rot_[1] += mouse.x * sens;
+
+    if (mouse_rot_[1] > M_PI * 2) {
+      mouse_rot_[1] -= M_PI * 2;
+    } else if (mouse_rot_[1] < -M_PI * 2) {
+      mouse_rot_[1] += M_PI * 2;
+    }
+
+    //std::cout << std::to_string(mouse.y) << "\n";
+    //std::cout << std::to_string(mouse.x) << "\n";
+
+    rotation = Quaternion::FromEulerAngles(mouse_rot_[0], mouse_rot_[1], 0);
   }
 
   void End() override {
@@ -126,7 +139,7 @@ class Transform : public Component {
   Quaternion rotation;
   Vector3 local_scale;
   // temp
-  Vector2 mouse_rot;
+  Vector2 mouse_rot_;
 };
 
 #endif //JUST_SOME_GRAPHICS_SRC_TRANSFORM_HPP_
