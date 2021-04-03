@@ -6,6 +6,7 @@
 #include <mathfu/glsl_mappings.h>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include "src/core/gl_error.hpp"
 #include "src/core/entity.hpp"
@@ -21,6 +22,7 @@ Application::Application() :
   GLCheckError(__FILE__, __LINE__);
 
   // Test
+  entity.transform_.SetPosition(mathfu::vec3(5, 0, -20));
   entity.AddComponent(&mesh);
   entity.Start();
 
@@ -72,6 +74,9 @@ Application::Application() :
 void Application::Loop() {
   ApplicationCore::Loop();
 
+  // TODO move
+  entity.Update();
+
   // exit on window close button pressed
   if (glfwWindowShouldClose(GetWindow())) {
     Exit();
@@ -80,14 +85,15 @@ void Application::Loop() {
   float t = GetTime();
   // set matrix : projection + view
   projection = mathfu::mat4::Perspective(
-      float(2.0 * atan(getHeight() / 1920.f)),
-      GetWindowRatio(), 0.1f, 100.f
+      M_PI * 0.25,
+      GetWindowRatio(), 0.1f, 1000.f,
+      1
   );
 
   view = mathfu::mat4::LookAt(
-      mathfu::vec3(0.0, 0.0, 0.0),
-      mathfu::vec3(20.0 * sin(t), 20.0 * cos(t), 20.0),
-      mathfu::vec3(0.0, 0.0, 1.0),
+      entity.transform_.GetPosition() + entity.transform_.Forward(),
+      entity.transform_.GetPosition(),
+      mathfu::vec3(0, 1, 0),
       1
   );
 

@@ -11,6 +11,7 @@
 #include <bitset>
 #include <map>
 #include <mathfu/vector.h>
+#include <mathfu/glsl_mappings.h>
 
 #include "abstract_updatable.hpp"
 #include "multi_frame_data.hpp"
@@ -29,14 +30,25 @@ class InputManager {
     A = GLFW_KEY_A,
     S = GLFW_KEY_S,
     D = GLFW_KEY_D,
+    Space = GLFW_KEY_SPACE,
+    LCtrl = GLFW_KEY_LEFT_CONTROL,
+    LShift = GLFW_KEY_LEFT_SHIFT,
     Esc = GLFW_KEY_ESCAPE,
     KeyEnd
   };
 
-  inline static const Key all_keys[] = {Left, Right, Up, Down, W, A, S, D, Esc};
+  inline static const Key all_keys[] = {Left, Right, Up, Down, W, A, S, D, Esc, Space, LCtrl, LShift};
 
   InputManager() {
     window_ = nullptr;
+  }
+
+  /**
+   * Mouse position delta since last frame
+   * @return
+   */
+  static mathfu::vec2 GetMouseDelta() {
+    return mouse_pos_.GetDelta();
   }
 
   /**
@@ -72,9 +84,9 @@ class InputManager {
 
   void Update() {
     // Update mouse pos
-    auto mouse_pos = mathfu::Vector<double, 2>();
-    glfwGetCursorPos(window_, &mouse_pos.x, &mouse_pos.y);
-    mouse_pos_.Update(mouse_pos);
+    double x, y;
+    glfwGetCursorPos(window_, &x, &y);
+    mouse_pos_.Update(mathfu::vec2(x, y));
 
     // Update keyboard bitset
     keys_last_frame_ = keys_;
@@ -88,12 +100,12 @@ class InputManager {
       }
     }
 
-    std::cout << std::to_string( mouse_pos_.GetDelta().x) << "\n";
+    std::cout << std::to_string(mouse_pos_.GetDelta().x) << "\n";
 
   }
 
  private:
-  inline static MultiFrameData<mathfu::Vector<double, 2>> mouse_pos_;
+  inline static MultiFrameData<mathfu::vec2> mouse_pos_;
   inline static PressedKeyMap keys_;
   inline static PressedKeyMap keys_last_frame_;
   GLFWwindow *window_;
