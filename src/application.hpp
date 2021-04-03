@@ -25,6 +25,7 @@ class Application : public ApplicationCore {
 
   mathfu::mat4 projection = mathfu::mat4::Identity();
   mathfu::mat4 view = mathfu::mat4::Identity();
+  mathfu::mat4 model = mathfu::mat4::Identity();
 
   GLuint vao, vbo, ibo;
 

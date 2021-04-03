@@ -17,19 +17,19 @@ class MultiFrameData {
   /**
    * Constructor
    */
-  explicit MultiFrameData(T initial) {
-    current_frame_ = initial;
-    Update(initial);
+  MultiFrameData() {
+    current_frame_ = T(0.);
+    Update(T(0.));
   }
 
   /**
    * Provide a custom delta calculation formula
    * @param delta_calc
    */
-  explicit MultiFrameData(T initial, DeltaCalc delta_calc) {
+  explicit MultiFrameData(DeltaCalc delta_calc) {
     delta_calc_ = delta_calc;
-    current_frame_ = initial;
-    Update(initial);
+    current_frame_ = T(0.);
+    Update(T(0.));
   }
 
   /**
@@ -71,7 +71,7 @@ class MultiFrameData {
    * Default delta calculation formula
    */
   DeltaCalc delta_calc_ = [](T current, T last) {
-    return current - last;
+    return last - current;
   };
 
   T current_frame_;

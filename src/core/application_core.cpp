@@ -62,7 +62,7 @@ ApplicationCore::ApplicationCore()
   }
 
   glfwMakeContextCurrent(window);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   if (glfwRawMouseMotionSupported()) {
     glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);

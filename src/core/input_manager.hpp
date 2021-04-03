@@ -48,7 +48,7 @@ class InputManager {
    * @return
    */
   static mathfu::vec2 GetMouseDelta() {
-    return mouse_pos_.GetDelta();
+    return mathfu::vec2(mouse_pos_last_frame_[0] - mouse_pos_[0], mouse_pos_last_frame_[1] - mouse_pos_[1]);
   }
 
   /**
@@ -84,9 +84,13 @@ class InputManager {
 
   void Update() {
     // Update mouse pos
+    mouse_pos_last_frame_[0] = mouse_pos_[0];
+    mouse_pos_last_frame_[1] = mouse_pos_[1];
+
     double x, y;
     glfwGetCursorPos(window_, &x, &y);
-    mouse_pos_.Update(mathfu::vec2(x, y));
+    mouse_pos_[0] = (float) x;
+    mouse_pos_[1] = (float) y;
 
     // Update keyboard bitset
     keys_last_frame_ = keys_;
@@ -99,13 +103,11 @@ class InputManager {
         keys_.set(key, false);
       }
     }
-
-    std::cout << std::to_string(mouse_pos_.GetDelta().x) << "\n";
-
   }
 
  private:
-  inline static MultiFrameData<mathfu::vec2> mouse_pos_;
+  inline static float mouse_pos_[2];
+  inline static float mouse_pos_last_frame_[2];
   inline static PressedKeyMap keys_;
   inline static PressedKeyMap keys_last_frame_;
   GLFWwindow *window_;

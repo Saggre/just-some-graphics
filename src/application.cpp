@@ -7,7 +7,6 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-
 #include "src/core/gl_error.hpp"
 #include "src/core/entity.hpp"
 #include "src/core/components/mesh.hpp"
@@ -22,7 +21,7 @@ Application::Application() :
   GLCheckError(__FILE__, __LINE__);
 
   // Test
-  entity.transform_.SetPosition(mathfu::vec3(5, 0, -20));
+  entity.transform_.SetPosition(mathfu::vec3(0, 0, -15));
   entity.AddComponent(&mesh);
   entity.Start();
 
@@ -77,13 +76,16 @@ void Application::Loop() {
   // TODO move
   entity.Update();
 
+  auto d = entity.transform_.GetPosition();
+  std::cout << std::to_string(d.x) << ", " << std::to_string(d.y) << ", " << std::to_string(d.z) << "\n";
+
   // exit on window close button pressed
   if (glfwWindowShouldClose(GetWindow())) {
     Exit();
   }
 
   float t = GetTime();
-  // set matrix : projection + view
+
   projection = mathfu::mat4::Perspective(
       M_PI * 0.25,
       GetWindowRatio(), 0.1f, 1000.f,
@@ -97,6 +99,8 @@ void Application::Loop() {
       1
   );
 
+  model = mathfu::mat4::Identity();
+
   // clear
   glClear(GL_COLOR_BUFFER_BIT);
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -107,6 +111,7 @@ void Application::Loop() {
   // send uniforms
   shader_program.SetUniform("projection", projection);
   shader_program.SetUniform("view", view);
+  shader_program.SetUniform("model", model);
 
   GLCheckError(__FILE__, __LINE__);
 

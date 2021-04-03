@@ -27,7 +27,7 @@ class Transform : public Component {
 
   Transform() {
     position = Vector3(0, 0, 0);
-    rotation = Quaternion::FromAngleAxis(0, Vector3(0, 1, 0));
+    rotation = Quaternion::identity;
     local_scale = Vector3(1, 1, 1);
     mouse_rot = Vector2(0, 0);
   };
@@ -58,30 +58,33 @@ class Transform : public Component {
     }
 
     if (InputManager::IsKeyPressed(InputManager::Space)) {
-      position += Up() * speed;
+      position += mathfu::vec3(0, 1, 0) * speed;
     }
 
     if (InputManager::IsKeyPressed(InputManager::LCtrl)) {
-      position -= Up() * speed;
+      position -= mathfu::vec3(0, 1, 0) * speed;
     }
 
     auto mouse = InputManager::GetMouseDelta();
 
+    float sens = 0.003;
+
     const float MIN_X = 0.0f;
     const float MAX_X = M_PI * 2;
-    const float MIN_Y = -M_PI * 0.5;
-    const float MAX_Y = M_PI * 0.5;
+    const float MIN_Y = -M_PI * 0.5 + 0.01;
+    const float MAX_Y = M_PI * 0.5 - 0.01;
 
-    mouse_rot.x -= mouse.x * 0.005;
+    mouse_rot.x += mouse.x * sens;
 
-    mouse_rot.y += mouse.y * 0.005;
+    mouse_rot.y -= mouse.y * sens;
     if (mouse_rot.y < MIN_Y) {
       mouse_rot.y = MIN_Y;
     } else if (mouse_rot.y > MAX_Y) {
       mouse_rot.y = MAX_Y;
     }
 
-    rotation = Quaternion::FromEulerAngles(mouse_rot.y, mouse_rot.x, 0);
+    // TODO This line is fucked
+    //rotation = Quaternion::FromEulerAngles(mouse_rot.y, mouse_rot.x, 0);
   }
 
   void End() override {
