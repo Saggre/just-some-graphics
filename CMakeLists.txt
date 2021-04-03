@@ -22,7 +22,7 @@ add_executable(main
         src/core/shader.hpp
         src/core/shader.cpp
         src/core/entity.hpp
-        src/core/abstract_updatable.hpp src/camera/camera.hpp src/camera/creative_camera.hpp src/core/components/transform.hpp src/core/input_manager.hpp src/core/multi_frame_data.hpp src/core/components/component.hpp src/core/components/mesh.hpp)
+        src/core/abstract_updatable.hpp src/camera/camera.hpp src/core/components/creative_camera.hpp src/core/components/transform.hpp src/core/input_manager.hpp src/core/multi_frame_data.hpp src/core/components/component.hpp src/core/components/mesh.hpp src/core/time.hpp src/core/util/mesh_repository.hpp)
 
 add_dependencies(main embed_shader)
 

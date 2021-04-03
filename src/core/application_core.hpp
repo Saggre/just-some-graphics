@@ -3,6 +3,7 @@
 
 #include "input_manager.hpp"
 #include "abstract_updatable.hpp"
+#include "time.hpp"
 
 #include <string>
 #include <iostream>
@@ -86,8 +87,7 @@ class ApplicationCore {
   std::vector<AbstractUpdatable *> entities_;
   std::vector<int> test_;
 
-  inline static float time;
-  inline static float delta_time;
+  inline static Time time_;
 
   std::bitset<64> engine_flags_;
 

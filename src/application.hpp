@@ -8,6 +8,7 @@
 
 #include <mathfu/matrix.h>
 #include <mathfu/glsl_mappings.h>
+#include <src/core/components/creative_camera.hpp>
 
 class Application : public ApplicationCore {
  public:
@@ -32,6 +33,7 @@ class Application : public ApplicationCore {
   // Test
   Entity entity;
   Mesh mesh;
+  CreativeCamera creative_camera;
 };
 
 #endif

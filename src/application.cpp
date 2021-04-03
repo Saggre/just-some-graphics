@@ -24,6 +24,7 @@ Application::Application() :
   // Test
   entity.transform_.SetPosition(mathfu::vec3(0, 0, -15));
   entity.AddComponent(&mesh);
+  entity.AddComponent(&creative_camera);
   entity.Start();
 
   // creation of the vertex array buffer----------------------------------------
@@ -88,8 +89,6 @@ void Application::Loop() {
   if (glfwWindowShouldClose(GetWindow())) {
     Exit();
   }
-
-  float t = GetTime();
 
   projection = mathfu::mat4::Perspective(
       M_PI * 0.25,

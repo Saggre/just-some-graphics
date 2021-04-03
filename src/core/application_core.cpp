@@ -4,7 +4,6 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdexcept>
-#include <vector>
 
 using namespace std;
 
@@ -22,8 +21,6 @@ ApplicationCore::ApplicationCore()
     : state(stateReady), title("ApplicationCore") {
   currentApplication = this;
 
-  time = 0.0;
-  delta_time = 0.0;
   dimension_changed = false;
 
   cout << "[Info]: GLFW initialisation" << endl;
@@ -95,10 +92,6 @@ GLFWwindow *ApplicationCore::GetWindow() const { return window; }
 
 void ApplicationCore::Exit() { state = stateExit; }
 
-float ApplicationCore::GetTime() { return time; }
-
-float ApplicationCore::GetDeltaTime() { return delta_time; }
-
 void ApplicationCore::Start() {
   input_manager.Init(window);
 }
@@ -108,16 +101,11 @@ void ApplicationCore::Run() {
 
   // Make the window's context current
   glfwMakeContextCurrent(window);
-
-  time = (float) glfwGetTime();
-
   Start();
 
   while (state == stateRun) {
-    // compute new time and delta time
-    auto t = (float) glfwGetTime();
-    delta_time = t - time;
-    time = t;
+    auto time = (float) glfwGetTime();
+    Time::SetTime(time);
 
     // detech window related changes
     DetectWindowDimensionChange();
@@ -151,7 +139,7 @@ void ApplicationCore::AddEntity(AbstractUpdatable *entity) {
 }
 
 void ApplicationCore::Loop() {
-  if (!IsEngineFlag(InputEnabledOnce) && time > 0.5) {
+  if (!IsEngineFlag(InputEnabledOnce) && Time::time_ > 0.5) {
     InputManager::SetMouseEnabled(true);
     SetEngineFlag(InputEnabledOnce);
   }

@@ -26,6 +26,7 @@ class Entity : public AbstractUpdatable {
     components_.push_back(&transform_);
 
     for (auto &component : components_) {
+      component->Init(this, &transform_);
       component->Start();
     }
   }
