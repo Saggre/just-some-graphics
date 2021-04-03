@@ -18,6 +18,8 @@
  */
 class CreativeCamera : public Component {
   void Start() override {
+    mouse_rot_[0] = 0;
+    mouse_rot_[1] = 0;
   }
 
   void Update() override {

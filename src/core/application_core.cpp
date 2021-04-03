@@ -101,6 +101,8 @@ void ApplicationCore::Run() {
 
   // Make the window's context current
   glfwMakeContextCurrent(window);
+  glfwSetTime(0);
+
   Start();
 
   while (state == stateRun) {

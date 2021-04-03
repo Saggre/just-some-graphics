@@ -11,6 +11,7 @@
 #include "src/core/gl_error.hpp"
 #include "src/core/entity.hpp"
 #include "src/core/components/mesh.hpp"
+#include "src/core/util/primitive.hpp"
 
 #define SHADER_DIR "../shader/"
 
@@ -22,6 +23,7 @@ Application::Application() :
   GLCheckError(__FILE__, __LINE__);
 
   // Test
+  mesh = Mesh::FromPrimitive(Primitive::Cube());
   entity.transform_.SetPosition(mathfu::vec3(0, 0, -15));
   entity.AddComponent(&mesh);
   entity.AddComponent(&creative_camera);
@@ -39,7 +41,7 @@ Application::Application() :
   // vbo
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Mesh::Vertex),
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
                vertices.data(), GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -58,12 +60,11 @@ Application::Application() :
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
   // map vbo to shader attributes
-  shader_program.SetAttribute("position", 3, sizeof(Mesh::Vertex),
-                              offsetof(Mesh::Vertex, position));
-  shader_program.SetAttribute("normal", 3, sizeof(Mesh::Vertex),
-                              offsetof(Mesh::Vertex, normal));
-  shader_program.SetAttribute("color", 4, sizeof(Mesh::Vertex),
-                              offsetof(Mesh::Vertex, color));
+  shader_program.SetAttribute("position", 3, sizeof(Vertex), 0);
+  /*shader_program.SetAttribute("normal", 3, sizeof(Vertex),
+                              offsetof(Vertex, normal));
+  shader_program.SetAttribute("color", 4, sizeof(Vertex),
+                              offsetof(Vertex, color));*/
 
   // bind the ibo
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -135,11 +136,7 @@ void Application::Loop() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
   GLCheckError(__FILE__, __LINE__);
-  glDrawElements(GL_TRIANGLES,        // mode
-                 100 * 100 * 2 * 3, // count
-                 GL_UNSIGNED_INT,     // type
-                 nullptr                 // element array buffer offset
-  );
+  glDrawElements(GL_TRIANGLES, mesh.GetVertices().size() * 3, GL_UNSIGNED_INT, nullptr);
 
   glBindVertexArray(0);
 

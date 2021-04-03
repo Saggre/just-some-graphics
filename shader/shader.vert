@@ -1,8 +1,6 @@
 #version 410
 
 in vec3 position;
-in vec3 normal;
-in vec4 color;
 
 uniform mat4 projection;
 uniform mat4 view;
