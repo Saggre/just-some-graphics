@@ -58,7 +58,7 @@ ApplicationCore::ApplicationCore()
   }
 
   glfwMakeContextCurrent(window);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
   if (glfwRawMouseMotionSupported()) {
     glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -73,17 +73,14 @@ ApplicationCore::ApplicationCore()
         (const char *) glewGetErrorString(err));
   }
 
-  // get version info
   const GLubyte *renderer = glGetString(GL_RENDERER);
   const GLubyte *version = glGetString(GL_VERSION);
   cout << "Renderer: " << renderer << endl;
   cout << "OpenGL version supported " << version << endl;
 
-  // opengl configuration
-  glEnable(GL_DEPTH_TEST); // enable depth-testing
-  glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
-
-  // vsync
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glDepthFunc(GL_LESS);
   // glfwSwapInterval(false);
 }
 #pragma clang diagnostic pop

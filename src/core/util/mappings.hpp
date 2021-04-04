@@ -18,6 +18,11 @@ using Matrix4 = mathfu::mat4;
 using Quaternion = mathfu::quat;
 
 using Index = uint32_t;
-using Vertex = mathfu::vec3;
+
+struct Vertex {
+  Vector3 position;
+  Vector3 normal;
+  Vector2 tex_coord;
+};
 
 #endif //JUST_SOME_GRAPHICS_SRC_CORE_UTIL_NAMES_HPP_

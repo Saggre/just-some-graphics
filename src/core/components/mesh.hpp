@@ -34,11 +34,10 @@ class Mesh : public Component {
    * @return
    */
   static Mesh FromPrimitive(const Primitive &primitive) {
-    Mesh mesh;
-    mesh.indices = primitive.indices;
-    mesh.vertices = primitive.vertices;
-    mesh.tex_coords = primitive.tex_coords;
-    mesh.normals = primitive.normals;
+    Mesh mesh = Mesh();
+    mesh.indices = std::vector<Index>(primitive.indices);
+    mesh.vertices = std::vector<Vertex>(primitive.vertices);
+    mesh.tex_coords = std::vector<Vector2>(primitive.tex_coords);
     return mesh;
   }
 
@@ -50,17 +49,12 @@ class Mesh : public Component {
     return indices;
   }
 
-  inline const std::vector<Vector3> &GetNormals() const {
-    return normals;
-  }
-
   inline const std::vector<Vector2> &GetTexCoords() const {
     return tex_coords;
   }
 
  private:
-  std::vector<Vector3> vertices;
-  std::vector<Vector3> normals;
+  std::vector<Vertex> vertices;
   std::vector<Index> indices;
   std::vector<Vector2> tex_coords;
 };

@@ -1,17 +1,15 @@
 #include "application.hpp"
 
 #include <GLFW/glfw3.h>
-#include <mathfu/vector.h>
 #include <mathfu/matrix.h>
 #include <mathfu/glsl_mappings.h>
-#include <iostream>
-#include <vector>
 #include <cmath>
-#include <future>
+
 #include "src/core/gl_error.hpp"
 #include "src/core/entity.hpp"
 #include "src/core/components/mesh.hpp"
 #include "src/core/util/primitive.hpp"
+#include "src/core/util/mappings.hpp"
 
 #define SHADER_DIR "../shader/"
 
@@ -23,7 +21,8 @@ Application::Application() :
   GLCheckError(__FILE__, __LINE__);
 
   // Test
-  mesh = Mesh::FromPrimitive(Primitive::Cube());
+  auto p = Primitive::Cube();
+  mesh = Mesh::FromPrimitive(p);
   entity.transform_.SetPosition(mathfu::vec3(0, 0, -15));
   entity.AddComponent(&mesh);
   entity.AddComponent(&creative_camera);
@@ -38,21 +37,19 @@ Application::Application() :
   vbo = -1;
   ibo = -1;
 
-  // vbo
+  // Vertex buffer
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
-               vertices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // ibo
+  // Index buffer
   glGenBuffers(1, &ibo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint),
-               indices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  // vao
+  // Vao
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
@@ -61,10 +58,8 @@ Application::Application() :
 
   // map vbo to shader attributes
   shader_program.SetAttribute("position", 3, sizeof(Vertex), 0);
-  /*shader_program.SetAttribute("normal", 3, sizeof(Vertex),
-                              offsetof(Vertex, normal));
-  shader_program.SetAttribute("color", 4, sizeof(Vertex),
-                              offsetof(Vertex, color));*/
+  shader_program.SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
+  shader_program.SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
   // bind the ibo
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -136,7 +131,7 @@ void Application::Loop() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
   GLCheckError(__FILE__, __LINE__);
-  glDrawElements(GL_TRIANGLES, mesh.GetVertices().size() * 3, GL_UNSIGNED_INT, nullptr);
+  glDrawElements(GL_TRIANGLE_STRIP, mesh.GetVertices().size() * 3, GL_UNSIGNED_INT, nullptr);
 
   glBindVertexArray(0);
 
