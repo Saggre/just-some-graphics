@@ -4,12 +4,13 @@
 static const char *shader_frag = R""""(
 #version 410
 
-// output
+uniform sampler2D myTextureSampler;
+
 out vec4 color;
 
 void main(void)
 {
-    color = vec4(1, 0, 0, 1);
+    color = texture(myTextureSampler, UV).rgb;
 }
 )"""";
 

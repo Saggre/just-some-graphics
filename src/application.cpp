@@ -10,6 +10,7 @@
 #include "src/core/components/mesh.hpp"
 #include "src/core/util/primitive.hpp"
 #include "src/core/util/mappings.hpp"
+#include "src/core/image.hpp"
 
 #define SHADER_DIR "../shader/"
 
@@ -66,6 +67,10 @@ Application::Application() :
 
   // vao end
   glBindVertexArray(0);
+
+  GLuint texture = Image::loadDDS("image/missing.dds");
+
+  int a = 0;
 }
 
 void Application::Start() {
