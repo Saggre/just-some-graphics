@@ -68,9 +68,7 @@ Application::Application() :
   // vao end
   glBindVertexArray(0);
 
-  GLuint texture = Image::loadDDS("image/missing.dds");
-
-  int a = 0;
+  // TODO load image
 }
 
 void Application::Start() {
