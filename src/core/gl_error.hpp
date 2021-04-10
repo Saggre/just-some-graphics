@@ -1,7 +1,6 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_GL_ERROR_HPP
 #define JUST_SOME_GRAPHICS_SRC_GL_ERROR_HPP
 
-#include <GL/glew.h>
 #include <iostream>
 #include <string>
 

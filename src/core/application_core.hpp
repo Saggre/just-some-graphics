@@ -26,16 +26,15 @@ class ApplicationCore {
 
     std::cout << "[Info]: GLFW initialisation" << std::endl;
 
-    // initialize the GLFW library
-    if (!glfwInit()) {
-      throw std::runtime_error("Couldn't init GLFW");
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+      SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+      return;
     }
 
-    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-    const GLFWvidmode *vidMode = glfwGetVideoMode(monitor);
-
-    width = vidMode->width;
-    height = vidMode->height;
+    SDL_DisplayMode DM;
+    SDL_GetCurrentDisplayMode(0, &DM);
+    width = DM.w;
+    height = DM.h;
 
     if (!fullscreen) {
       width = 1000;
@@ -45,16 +44,22 @@ class ApplicationCore {
     // setting the opengl version
     int major = 4;
     int minor = 1;
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
+    /*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
 
     // create the window
-    window = glfwCreateWindow(width, height, title.c_str(), fullscreen ? monitor : nullptr, nullptr);
+    //window = glfwCreateWindow(width, height, title.c_str(), fullscreen ? monitor : nullptr, nullptr);
+    window = SDL_CreateWindow(title.c_str(),
+                              SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED,
+                              width,
+                              height,
+                              SDL_WINDOW_SHOWN);
 
     if (!window) {
-      glfwTerminate();
+      SDL_Quit();
       throw std::runtime_error("Couldn't create a window");
     }
 
@@ -69,7 +74,7 @@ class ApplicationCore {
     GLenum err = glewInit();
 
     if (err != GLEW_OK) {
-      glfwTerminate();
+      SDL_Quit();
       throw std::runtime_error(std::string("Could initialize GLEW, error = ") +
           (const char *) glewGetErrorString(err));
     }
@@ -101,7 +106,7 @@ class ApplicationCore {
    * Get window id
    * @return
    */
-  GLFWwindow *GetWindow() const {
+  SDL_Window *GetWindow() const {
     return window;
   }
 
@@ -153,7 +158,7 @@ class ApplicationCore {
       glfwPollEvents();
     }
 
-    glfwTerminate();
+    SDL_Quit();
   }
 
   /**
@@ -195,7 +200,7 @@ class ApplicationCore {
 
   ApplicationCore &operator=(const ApplicationCore &) { return *this; }
 
-  GLFWwindow *window;
+  SDL_Window *window;
 
   std::vector<AbstractUpdatable *> entities_;
   std::vector<int> test_;
@@ -210,7 +215,7 @@ class ApplicationCore {
 
   void DetectWindowDimensionChange() {
     int w, h;
-    glfwGetWindowSize(GetWindow(), &w, &h);
+    SDL_GetWindowSize(GetWindow(), &w, &h);
     dimension_changed = (w != width or h != height);
     if (dimension_changed) {
       width = w;
@@ -248,7 +253,8 @@ class ApplicationCore {
     }
 
     if (InputManager::IsKeyDown(InputManager::Esc)) {
-      glfwSetWindowShouldClose(window, GLFW_TRUE);
+      // TODO
+      //glfwSetWindowShouldClose(window, SDL_TRUE);
     }
   }
 

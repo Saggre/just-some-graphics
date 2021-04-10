@@ -1,8 +1,9 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_APPLICATION_HPP
 #define JUST_SOME_GRAPHICS_SRC_APPLICATION_HPP
 
+#include <SDL.h>
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+
 #include <mathfu/matrix.h>
 #include <mathfu/glsl_mappings.h>
 #include <cmath>
@@ -29,8 +30,6 @@ class Application : public ApplicationCore {
                   vertex_shader(SHADER_DIR "/shader.vert", GL_VERTEX_SHADER),
                   fragment_shader(SHADER_DIR "/shader.frag", GL_FRAGMENT_SHADER),
                   shader_program({vertex_shader, fragment_shader}) {
-    GLCheckError(__FILE__, __LINE__);
-
     // Test
     auto p = Primitive::Cube();
     mesh = Mesh::FromPrimitive(p);
@@ -134,14 +133,11 @@ class Application : public ApplicationCore {
     shader_program.SetUniform("view", view);
     shader_program.SetUniform("model", model);
 
-    GLCheckError(__FILE__, __LINE__);
-
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-    GLCheckError(__FILE__, __LINE__);
     glDrawElements(GL_TRIANGLE_STRIP, mesh.GetVertices().size() * 3, GL_UNSIGNED_INT, nullptr);
 
     glBindVertexArray(0);

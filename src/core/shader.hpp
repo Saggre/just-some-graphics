@@ -1,7 +1,6 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_SHADER_HPP
 #define JUST_SOME_GRAPHICS_SRC_SHADER_HPP
 
-#include <GL/glew.h>
 #include <initializer_list>
 #include <map>
 #include <string>

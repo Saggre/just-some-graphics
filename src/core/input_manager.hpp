@@ -5,8 +5,6 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_CORE_INPUT_MANAGER_HPP_
 #define JUST_SOME_GRAPHICS_SRC_CORE_INPUT_MANAGER_HPP_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 #include <bitset>
 #include <map>
