@@ -13,14 +13,10 @@ add_custom_target(
 # The main executable
 add_executable(main
         src/main.cpp
-        src/application.cpp
-        src/application.cpp
-        src/core/application_core.cpp
-        src/core/application_core.cpp
+        src/application.hpp
+        src/core/application_core.hpp
         src/core/gl_error.hpp
-        src/core/gl_error.cpp
         src/core/shader.hpp
-        src/core/shader.cpp
         src/core/entity.hpp
         src/core/abstract_updatable.hpp
         src/core/components/creative_camera.hpp

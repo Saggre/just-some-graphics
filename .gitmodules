@@ -10,3 +10,6 @@
 [submodule "lib/gainput"]
 	path = lib/gainput
 	url = git@github.com:jkuhlmann/gainput.git
+[submodule "lib/SDL2"]
+	path = lib/SDL2
+	url = git@github.com:libsdl-org/SDL.git
