@@ -27,8 +27,8 @@
 class Application : public ApplicationCore {
  public:
   Application() : ApplicationCore(),
-                  vertex_shader(SHADER_DIR "/shader.vert", GL_VERTEX_SHADER),
-                  fragment_shader(SHADER_DIR "/shader.frag", GL_FRAGMENT_SHADER),
+                  vertex_shader(SHADER_DIR "shader.vert", GL_VERTEX_SHADER),
+                  fragment_shader(SHADER_DIR "shader.frag", GL_FRAGMENT_SHADER),
                   shader_program({vertex_shader, fragment_shader}) {
     // Test
     auto p = Primitive::Cube();
@@ -68,8 +68,8 @@ class Application : public ApplicationCore {
 
     // map vbo to shader attributes
     shader_program.SetAttribute("position", 3, sizeof(Vertex), 0);
-    shader_program.SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
-    shader_program.SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
+    //shader_program.SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
+    //shader_program.SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
     // bind the ibo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
