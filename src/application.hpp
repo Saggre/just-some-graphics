@@ -89,12 +89,6 @@ class Application : public ApplicationCore {
     entity.Update();
 
     auto d = entity.transform_.GetPosition();
-    //std::cout << std::to_string(d.x) << ", " << std::to_string(d.y) << ", " << std::to_string(d.z) << "\n";
-
-    // exit on window close button pressed
-    if (glfwWindowShouldClose(GetWindow())) {
-      Exit();
-    }
 
     projection = mathfu::mat4::Perspective(
         M_PI * 0.25,

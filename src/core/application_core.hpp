@@ -10,8 +10,6 @@
 #include <vector>
 #include <bitset>
 
-struct GLFWwindow;
-
 class ApplicationCore {
  public:
   enum EngineFlag {
@@ -21,10 +19,9 @@ class ApplicationCore {
 
   ApplicationCore() : state(stateReady), title("ApplicationCore") {
     currentApplication = this;
-
     dimension_changed = false;
 
-    std::cout << "[Info]: GLFW initialisation" << std::endl;
+    std::cout << "[Info]: SDL initialisation" << std::endl;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
       SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
@@ -41,16 +38,7 @@ class ApplicationCore {
       height = 600;
     }
 
-    // setting the opengl version
-    int major = 4;
-    int minor = 1;
-    /*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
-
-    // create the window
-    //window = glfwCreateWindow(width, height, title.c_str(), fullscreen ? monitor : nullptr, nullptr);
+    // Create a window
     window = SDL_CreateWindow(title.c_str(),
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
@@ -63,11 +51,11 @@ class ApplicationCore {
       throw std::runtime_error("Couldn't create a window");
     }
 
-    glfwMakeContextCurrent(window);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    if (glfwRawMouseMotionSupported()) {
-      glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    if (!renderer) {
+      std::cout << "Error creating renderer: " << SDL_GetError() << '\n';
+      SDL_Quit();
     }
 
     glewExperimental = GL_TRUE;
@@ -79,15 +67,14 @@ class ApplicationCore {
           (const char *) glewGetErrorString(err));
     }
 
-    const GLubyte *renderer = glGetString(GL_RENDERER);
-    const GLubyte *version = glGetString(GL_VERSION);
-    std::cout << "Renderer: " << renderer << std::endl;
-    std::cout << "OpenGL version supported " << version << std::endl;
+    const GLubyte *gl_renderer = glGetString(GL_RENDERER);
+    const GLubyte *gl_version = glGetString(GL_VERSION);
+    std::cout << "Renderer: " << gl_renderer << std::endl;
+    std::cout << "OpenGL version supported " << gl_version << std::endl;
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
-    // glfwSwapInterval(false);
   }
 
   static ApplicationCore &getInstance() {
@@ -121,13 +108,17 @@ class ApplicationCore {
    * Get current running time
    * @return
    */
-  static float GetTime();
+  static float GetTime() {
+    return (float) SDL_GetTicks();// TODO check scale
+  }
 
   /**
    * Get current delta time
    * @return
    */
-  static float GetDeltaTime();
+  static float GetDeltaTime() {
+    return 0.02; // TODO
+  }
 
   /**
    * Run application
@@ -135,27 +126,17 @@ class ApplicationCore {
   void Run() {
     state = stateRun;
 
-    // Make the window's context current
-    glfwMakeContextCurrent(window);
-    glfwSetTime(0);
-
     Start();
 
     while (state == stateRun) {
-      auto time = (float) glfwGetTime();
+      auto time = GetTime();
       Time::SetTime(time);
 
-      // detech window related changes
+      // Detect window related changes
       DetectWindowDimensionChange();
 
-      // execute the frame code
+      // Execute frame
       Loop();
-
-      // Swap Front and Back buffers (double buffering)
-      glfwSwapBuffers(window);
-
-      // Pool and process events
-      glfwPollEvents();
     }
 
     SDL_Quit();
@@ -165,7 +146,7 @@ class ApplicationCore {
    * Get window width in pixels
    * @return
    */
-  int getWidth() const {
+  int GetWidth() const {
     return width;
   }
 
@@ -173,7 +154,7 @@ class ApplicationCore {
    * Get window height in pixels
    * @return
    */
-  int getHeight() const {
+  int GetHeight() const {
     return height;
   }
 
@@ -189,7 +170,7 @@ class ApplicationCore {
     entities_.push_back(entity);
   }
 
-  bool windowDimensionChanged() {
+  bool WindowDimensionChanged() const {
     return dimension_changed;
   }
 
@@ -201,6 +182,7 @@ class ApplicationCore {
   ApplicationCore &operator=(const ApplicationCore &) { return *this; }
 
   SDL_Window *window;
+  SDL_Renderer *renderer;
 
   std::vector<AbstractUpdatable *> entities_;
   std::vector<int> test_;
@@ -224,8 +206,8 @@ class ApplicationCore {
     }
   }
 
-  void SetEngineFlag(EngineFlag flag, bool state = true) {
-    engine_flags_.set(flag, state);
+  void SetEngineFlag(EngineFlag flag, bool flag_state = true) {
+    engine_flags_.set(flag, flag_state);
   }
 
  protected:
@@ -254,7 +236,6 @@ class ApplicationCore {
 
     if (InputManager::IsKeyDown(InputManager::Esc)) {
       // TODO
-      //glfwSetWindowShouldClose(window, SDL_TRUE);
     }
   }
 
