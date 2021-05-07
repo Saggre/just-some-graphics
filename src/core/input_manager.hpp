@@ -20,7 +20,6 @@ using PressedKeyMap = std::bitset<512>;
 class InputManager {
  public:
   enum Key {
-    None = 0,
     Left = SDLK_LEFT,
     Right = SDLK_RIGHT,
     Up = SDLK_UP,
@@ -93,9 +92,10 @@ class InputManager {
     // Update keyboard bitset
     keys_last_frame_ = keys_;
 
-    const uint8_t *state = SDL_GetKeyboardState(nullptr);
+    auto *state = SDL_GetKeyboardState(nullptr);
     for (int key : all_keys) {
-      if (state[key]) {
+      auto scancode = SDL_GetScancodeFromKey(key); // TODO bake
+      if (state[scancode]) {
         keys_.set(key, true);
       } else {
         keys_.set(key, false);
@@ -123,14 +123,14 @@ class InputManager {
    * Calculate mouse delta
    */
   void UpdateMouse() {
-    int *x, *y;
-    SDL_GetMouseState(x, y);
+    int x, y;
+    SDL_GetMouseState(&x, &y);
 
     mouse_pos_last_frame_[0] = mouse_pos_[0];
     mouse_pos_last_frame_[1] = mouse_pos_[1];
 
-    mouse_pos_[0] = *x;
-    mouse_pos_[1] = *y;
+    mouse_pos_[0] = x;
+    mouse_pos_[1] = y;
   }
 };
 

@@ -230,6 +230,13 @@ class ApplicationCore {
   bool fullscreen = true;
 
   virtual void Loop() {
+    SDL_Event sdlEvent;
+    while (SDL_PollEvent(&sdlEvent)) {
+      if (sdlEvent.type == SDL_QUIT) {
+        //..
+      }
+    }
+
     if (!IsEngineFlag(InputEnabledOnce) && Time::time_ > 0.5) {
       InputManager::SetMouseEnabled(true);
       SetEngineFlag(InputEnabledOnce);
