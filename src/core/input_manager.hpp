@@ -50,7 +50,7 @@ class InputManager {
       return mathfu::vec2(0, 0);
     }
 
-    return mathfu::vec2(mouse_pos_[0] - mouse_pos_last_frame_[0], mouse_pos_[1] - mouse_pos_last_frame_[1]);
+    return mathfu::vec2(mouse_delta_[0], mouse_delta_[1]);
   }
 
   /**
@@ -82,7 +82,7 @@ class InputManager {
 
   void Init(SDL_Window *window) {
     window_ = window;
-    UpdateMouse();
+    UpdateMouse(); // TODO needed?
     UpdateMouse();
   }
 
@@ -112,8 +112,7 @@ class InputManager {
 
  private:
   inline static bool mouse_enabled_ = false;
-  inline static int mouse_pos_[2];
-  inline static int mouse_pos_last_frame_[2];
+  inline static int mouse_delta_[2];
   inline static PressedKeyMap keys_;
   inline static PressedKeyMap keys_last_frame_;
   SDL_Window *window_;
@@ -121,15 +120,12 @@ class InputManager {
   /**
    * Calculate mouse delta
    */
-  void UpdateMouse() {
+  static void UpdateMouse() {
     int x, y;
-    SDL_GetMouseState(&x, &y);
+    SDL_GetRelativeMouseState(&x, &y);
 
-    mouse_pos_last_frame_[0] = mouse_pos_[0];
-    mouse_pos_last_frame_[1] = mouse_pos_[1];
-
-    mouse_pos_[0] = x;
-    mouse_pos_[1] = y;
+    mouse_delta_[0] = x;
+    mouse_delta_[1] = y;
   }
 };
 

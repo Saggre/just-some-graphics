@@ -9,11 +9,13 @@
 #include "src/core/components/transform.hpp"
 #include "src/core/input_manager.hpp"
 #include "src/core/time.hpp"
+#include "src/core/util/print.hpp"
 
 #include <mathfu/vector.h>
 #include <mathfu/quaternion.h>
 #include <mathfu/glsl_mappings.h>
 #include <cmath>
+#include <src/application.hpp>
 
 /**
  * A "creative mode" camera, that can fly around
@@ -63,14 +65,14 @@ class CreativeCamera : public Component {
 
     transform->Move(move_delta * speed);
 
-    auto mouse = InputManager::GetMouseDelta();
-
-    float sens = 0.2;
+    auto mouse_delta = InputManager::GetMouseDelta();
+    Print::pos(mouse_delta);
+    float sens = 0.0005;
 
     const float MIN_Y = -M_PI * 0.5 + 0.01;
     const float MAX_Y = M_PI * 0.5 - 0.01;
 
-    mouse_rot_[0] += mouse.y * sens * Time::delta_time_;
+    mouse_rot_[0] += mouse_delta.y * sens * Time::delta_time_;
 
     if (mouse_rot_[0] < MIN_Y) {
       mouse_rot_[0] = MIN_Y;
@@ -78,7 +80,7 @@ class CreativeCamera : public Component {
       mouse_rot_[0] = MAX_Y;
     }
 
-    mouse_rot_[1] += mouse.x * sens * Time::delta_time_;
+    mouse_rot_[1] += mouse_delta.x * sens * Time::delta_time_;
 
     if (mouse_rot_[1] > M_PI * 2) {
       mouse_rot_[1] -= M_PI * 2;

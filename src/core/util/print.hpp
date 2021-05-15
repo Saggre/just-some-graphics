@@ -9,8 +9,16 @@
 
 class Print {
  public:
+  static void pos(const Vector4 &pos) {
+    std::cout << pos.x << " | " << pos.y << " | " << pos.z << pos.w << "\n";
+  }
+
   static void pos(const Vector3 &pos) {
     std::cout << pos.x << " | " << pos.y << " | " << pos.z << "\n";
+  }
+
+  static void pos(const Vector2 &pos) {
+    std::cout << pos.x << " | " << pos.y << "\n";
   }
 };
 

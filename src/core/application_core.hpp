@@ -59,6 +59,8 @@ class ApplicationCore {
       throw std::runtime_error("Couldn't create a window");
     }
 
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+
     context = SDL_GL_CreateContext(window);
 
     if (context == nullptr) {
@@ -242,8 +244,12 @@ class ApplicationCore {
     while (SDL_PollEvent(&sdlEvent)) {
       if (sdlEvent.type == SDL_QUIT) {
         //..
+      } else if (sdlEvent.type == SDL_MOUSEMOTION) {
+        auto motion = sdlEvent.motion;
       }
     }
+
+    input_manager.Update();
 
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -251,8 +257,6 @@ class ApplicationCore {
       InputManager::SetMouseEnabled(true);
       SetEngineFlag(InputEnabledOnce);
     }
-
-    input_manager.Update();
 
     // Reference to a pointer
     for (auto &entity : entities_) {

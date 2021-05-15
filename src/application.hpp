@@ -116,7 +116,7 @@ class Application : public ApplicationCore {
         1
     );
 
-    Print::pos(entity.transform_.GetPosition());
+    //Print::pos(entity.transform_.GetPosition());
 
     model = mathfu::mat4::Identity();
 
