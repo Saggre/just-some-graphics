@@ -15,23 +15,23 @@
 #include "abstract_updatable.hpp"
 #include "multi_frame_data.hpp"
 
-using PressedKeyMap = std::bitset<512>;
+using PressedKeyMap = std::bitset<SDL_NUM_SCANCODES>;
 
 class InputManager {
  public:
   enum Key {
-    Left = SDLK_LEFT,
-    Right = SDLK_RIGHT,
-    Up = SDLK_UP,
-    Down = SDLK_DOWN,
-    W = SDLK_w,
-    A = SDLK_a,
-    S = SDLK_s,
-    D = SDLK_d,
-    Space = SDLK_SPACE,
-    LCtrl = SDLK_LCTRL,
-    LShift = SDLK_LSHIFT,
-    Esc = SDLK_ESCAPE,
+    Left = SDL_SCANCODE_LEFT,
+    Right = SDL_SCANCODE_RIGHT,
+    Up = SDL_SCANCODE_UP,
+    Down = SDL_SCANCODE_DOWN,
+    W = SDL_SCANCODE_W,
+    A = SDL_SCANCODE_A,
+    S = SDL_SCANCODE_S,
+    D = SDL_SCANCODE_D,
+    Space = SDL_SCANCODE_SPACE,
+    LCtrl = SDL_SCANCODE_LCTRL,
+    LShift = SDL_SCANCODE_LSHIFT,
+    Esc = SDL_SCANCODE_ESCAPE,
     KeyEnd
   };
 
@@ -94,8 +94,7 @@ class InputManager {
 
     auto *state = SDL_GetKeyboardState(nullptr);
     for (int key : all_keys) {
-      auto scancode = SDL_GetScancodeFromKey(key); // TODO bake
-      if (state[scancode]) {
+      if (state[key]) {
         keys_.set(key, true);
       } else {
         keys_.set(key, false);

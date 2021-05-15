@@ -29,7 +29,7 @@ add_executable(main
         src/core/util/primitive.hpp
         src/core/util/mappings.hpp
         src/core/image.hpp
-        src/core/image.hpp)
+        src/core/image.hpp src/core/util/print.hpp)
 
 add_dependencies(main embed_shader)
 

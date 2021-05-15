@@ -21,6 +21,7 @@
 #include "src/core/util/primitive.hpp"
 #include "src/core/util/mappings.hpp"
 #include "src/core/image.hpp"
+#include "src/core/util/print.hpp"
 
 #define SHADER_DIR "../shader/"
 
@@ -47,6 +48,9 @@ class Application : public ApplicationCore {
     vbo = -1;
     ibo = -1;
 
+    auto sz = sizeof(Vertex);
+    auto data = vertices.data();
+
     // Vertex buffer
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -68,8 +72,8 @@ class Application : public ApplicationCore {
 
     // map vbo to shader attributes
     shader_program.SetAttribute("position", 3, sizeof(Vertex), 0);
-    //shader_program.SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
-    //shader_program.SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
+    shader_program.SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
+    shader_program.SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
     // bind the ibo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -96,7 +100,6 @@ class Application : public ApplicationCore {
         1
     );
 
-    // Dirty hack
     projection = projection * mathfu::mat4::FromScaleVector(mathfu::vec3(-1, 1, 1));
 
     /*float sz = 10;
@@ -113,11 +116,13 @@ class Application : public ApplicationCore {
         1
     );
 
+    Print::pos(entity.transform_.GetPosition());
+
     model = mathfu::mat4::Identity();
 
     // clear
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shader_program.Use();
@@ -137,6 +142,9 @@ class Application : public ApplicationCore {
     glBindVertexArray(0);
 
     ShaderProgram::Unuse();
+
+    //SDL_RenderPresent(renderer);
+    SDL_GL_SwapWindow(window); // Update the window
   }
 
   void Start() override {

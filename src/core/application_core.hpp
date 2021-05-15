@@ -17,6 +17,8 @@ class ApplicationCore {
     InputEnabledOnce = 1
   };
 
+  SDL_Window *window;
+
   ApplicationCore() : state(stateReady), title("ApplicationCore") {
     currentApplication = this;
     dimension_changed = false;
@@ -33,6 +35,7 @@ class ApplicationCore {
     width = DM.w;
     height = DM.h;
 
+    fullscreen = false;
     if (!fullscreen) {
       width = 1000;
       height = 600;
@@ -62,6 +65,7 @@ class ApplicationCore {
       printf("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
     }
 
+    renderer = nullptr;
     /*renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if (!renderer) {
@@ -86,6 +90,12 @@ class ApplicationCore {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
+
+    /*glMatrixMode(GL_PROJECTION_MATRIX);
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW_MATRIX);
+    glLoadIdentity();
+    glViewport(0, 0, width, height);*/
   }
 
   static ApplicationCore &getInstance() {
@@ -191,8 +201,6 @@ class ApplicationCore {
   State state;
 
   ApplicationCore &operator=(const ApplicationCore &) { return *this; }
-
-  SDL_Window *window;
   SDL_Renderer *renderer;
   SDL_GLContext context;
 
@@ -237,6 +245,8 @@ class ApplicationCore {
       }
     }
 
+    glClear(GL_COLOR_BUFFER_BIT);
+
     if (!IsEngineFlag(InputEnabledOnce) && Time::time_ > 0.5) {
       InputManager::SetMouseEnabled(true);
       SetEngineFlag(InputEnabledOnce);
@@ -250,14 +260,14 @@ class ApplicationCore {
     }
 
     if (InputManager::IsKeyDown(InputManager::Down)) {
+      // TODO remove debug
       std::cout << "Keypress\n";
     }
 
     if (InputManager::IsKeyDown(InputManager::Esc)) {
-      // TODO
+      state = stateExit;
     }
 
-    SDL_RenderPresent(renderer);
   }
 
   virtual void Start() {
