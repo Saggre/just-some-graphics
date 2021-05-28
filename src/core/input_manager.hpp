@@ -5,35 +5,33 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_CORE_INPUT_MANAGER_HPP_
 #define JUST_SOME_GRAPHICS_SRC_CORE_INPUT_MANAGER_HPP_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 #include <bitset>
 #include <map>
 #include <mathfu/vector.h>
 #include <mathfu/glsl_mappings.h>
+#include <SDL2/SDL.h>
 
 #include "abstract_updatable.hpp"
 #include "multi_frame_data.hpp"
 
-using PressedKeyMap = std::bitset<512>;
+using PressedKeyMap = std::bitset<SDL_NUM_SCANCODES>;
 
 class InputManager {
  public:
   enum Key {
-    None = 0,
-    Left = GLFW_KEY_LEFT,
-    Right = GLFW_KEY_RIGHT,
-    Up = GLFW_KEY_UP,
-    Down = GLFW_KEY_DOWN,
-    W = GLFW_KEY_W,
-    A = GLFW_KEY_A,
-    S = GLFW_KEY_S,
-    D = GLFW_KEY_D,
-    Space = GLFW_KEY_SPACE,
-    LCtrl = GLFW_KEY_LEFT_CONTROL,
-    LShift = GLFW_KEY_LEFT_SHIFT,
-    Esc = GLFW_KEY_ESCAPE,
+    Left = SDL_SCANCODE_LEFT,
+    Right = SDL_SCANCODE_RIGHT,
+    Up = SDL_SCANCODE_UP,
+    Down = SDL_SCANCODE_DOWN,
+    W = SDL_SCANCODE_W,
+    A = SDL_SCANCODE_A,
+    S = SDL_SCANCODE_S,
+    D = SDL_SCANCODE_D,
+    Space = SDL_SCANCODE_SPACE,
+    LCtrl = SDL_SCANCODE_LCTRL,
+    LShift = SDL_SCANCODE_LSHIFT,
+    Esc = SDL_SCANCODE_ESCAPE,
     KeyEnd
   };
 
@@ -52,7 +50,7 @@ class InputManager {
       return mathfu::vec2(0, 0);
     }
 
-    return mathfu::vec2(mouse_pos_[0] - mouse_pos_last_frame_[0], mouse_pos_[1] - mouse_pos_last_frame_[1]);
+    return mathfu::vec2(mouse_delta_[0], mouse_delta_[1]);
   }
 
   /**
@@ -82,9 +80,9 @@ class InputManager {
     return !keys_.test(keycode) && keys_last_frame_.test(keycode);
   }
 
-  void Init(GLFWwindow *window) {
+  void Init(SDL_Window *window) {
     window_ = window;
-    UpdateMouse();
+    UpdateMouse(); // TODO needed?
     UpdateMouse();
   }
 
@@ -94,9 +92,9 @@ class InputManager {
     // Update keyboard bitset
     keys_last_frame_ = keys_;
 
+    auto *state = SDL_GetKeyboardState(nullptr);
     for (int key : all_keys) {
-      int state = glfwGetKey(window_, key);
-      if (state == GLFW_PRESS) {
+      if (state[key]) {
         keys_.set(key, true);
       } else {
         keys_.set(key, false);
@@ -114,24 +112,20 @@ class InputManager {
 
  private:
   inline static bool mouse_enabled_ = false;
-  inline static float mouse_pos_[2];
-  inline static float mouse_pos_last_frame_[2];
+  inline static int mouse_delta_[2];
   inline static PressedKeyMap keys_;
   inline static PressedKeyMap keys_last_frame_;
-  GLFWwindow *window_;
+  SDL_Window *window_;
 
   /**
    * Calculate mouse delta
    */
-  void UpdateMouse() {
-    double x, y;
-    glfwGetCursorPos(window_, &x, &y);
+  static void UpdateMouse() {
+    int x, y;
+    SDL_GetRelativeMouseState(&x, &y);
 
-    mouse_pos_last_frame_[0] = mouse_pos_[0];
-    mouse_pos_last_frame_[1] = mouse_pos_[1];
-
-    mouse_pos_[0] = (float) x;
-    mouse_pos_[1] = (float) y;
+    mouse_delta_[0] = x;
+    mouse_delta_[1] = y;
   }
 };
 
