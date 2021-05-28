@@ -19,7 +19,7 @@ $ sudo apt install cmake libsdl2-dev g++
 $ sudo apt-get install cmake libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev -y
 $ mkdir build
 $ cd build
-$ cmake ..
+$ export CC="gcc" && export CXX="g++" && cmake ..
 $ make
 $ ./main
 ```

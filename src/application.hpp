@@ -1,7 +1,7 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_APPLICATION_HPP
 #define JUST_SOME_GRAPHICS_SRC_APPLICATION_HPP
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <GL/glew.h>
 
 #include <mathfu/matrix.h>

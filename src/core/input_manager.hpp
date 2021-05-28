@@ -10,7 +10,7 @@
 #include <map>
 #include <mathfu/vector.h>
 #include <mathfu/glsl_mappings.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "abstract_updatable.hpp"
 #include "multi_frame_data.hpp"

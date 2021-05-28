@@ -2,6 +2,11 @@
 cmake_minimum_required(VERSION 3.1)
 project(just-some-graphics)
 
+# Ignore compiler checks (required on cross-platform compilation)
+set(CMAKE_C_COMPILER_WORKS 1)
+set(CMAKE_CXX_COMPILER_WORKS 1)
+
+set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_CXX_STANDARD 17)
 set(SHADERS_SOURCE_DIR "${PROJECT_SOURCE_DIR}/shader")
 
@@ -29,16 +34,13 @@ add_executable(main
         src/core/util/primitive.hpp
         src/core/util/mappings.hpp
         src/core/image.hpp
-        src/core/image.hpp src/core/util/print.hpp)
+        src/core/image.hpp
+        src/core/util/print.hpp)
 
 add_dependencies(main embed_shader)
 
 set_property(TARGET main PROPERTY CXX_STANDARD 11)
 target_compile_options(main PRIVATE -Wall)
-
-# glfw
-add_subdirectory(lib/glfw EXCLUDE_FROM_ALL)
-target_link_libraries(main PRIVATE glfw)
 
 # glew
 add_definitions(-DGLEW_STATIC)
@@ -50,7 +52,7 @@ add_subdirectory(lib/glm EXCLUDE_FROM_ALL)
 target_link_libraries(main PRIVATE glm)
 
 # SDL2
-find_package(SDL2 REQUIRED)
+#find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 target_link_libraries(main PRIVATE SDL2)
 
