@@ -1,1 +1,0 @@
-/usr/bin/g++    -rdynamic CMakeFiles/main.dir/src/main.cpp.o  -o main  lib/glew/lib/libglew.a -lSDL2 -lGL -lX11 -ldl -lXext 
