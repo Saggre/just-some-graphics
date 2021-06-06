@@ -47,11 +47,17 @@ endif ()
 
 set_property(TARGET main PROPERTY CXX_STANDARD 11)
 target_compile_options(main PRIVATE -Wall)
+target_link_options(main PRIVATE -static-libgcc -static-libstdc++)
 
 # GLEW
 target_include_directories(main PRIVATE lib/GLEW/include)
 if (WIN32)
     target_link_libraries(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/lib/glew32.dll)
+
+    add_custom_command(TARGET main POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/lib/glew32.dll"
+            $<TARGET_FILE_DIR:main>)
 else ()
     target_link_libraries(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/lib64/libGLEW.a)
 endif ()
@@ -70,6 +76,11 @@ target_link_libraries(main PRIVATE glm)
 target_include_directories(main PRIVATE lib/SDL/include)
 if (WIN32)
     target_link_libraries(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL/lib/libSDL2.dll.a)
+
+    add_custom_command(TARGET main POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL/bin/SDL2.dll"
+            $<TARGET_FILE_DIR:main>)
 else ()
     target_link_libraries(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL/lib/libSDL2.so)
 endif ()
