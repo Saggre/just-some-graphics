@@ -10,3 +10,6 @@
 [submodule "lib/SDL2"]
 	path = lib/SDL2
 	url = git@github.com:libsdl-org/SDL.git
+[submodule "libsrc/GLEW"]
+	path = libsrc/GLEW
+	url = git@github.com:nigels-com/glew.git

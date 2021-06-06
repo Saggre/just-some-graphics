@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <bitset>
+#include <GL/glew.h>
 
 class ApplicationCore {
  public:

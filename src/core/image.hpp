@@ -5,8 +5,6 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_CORE_IMAGE_HPP_
 #define JUST_SOME_GRAPHICS_SRC_CORE_IMAGE_HPP_
 
-#include <GLFW/glfw3.h>
-
 class Image {
  public:
   static void LoadImage(const char *image_path) {
