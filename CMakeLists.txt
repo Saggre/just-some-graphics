@@ -50,17 +50,17 @@ target_compile_options(main PRIVATE -Wall)
 target_link_options(main PRIVATE -static-libgcc -static-libstdc++)
 
 # GLEW
-target_include_directories(main PRIVATE lib/GLEW/include)
-if (WIN32)
-    target_link_libraries(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/lib/glew32.dll)
+target_include_directories(main PUBLIC lib/GLEW/include)
+add_library(glew32 STATIC IMPORTED GLOBAL)
 
-    add_custom_command(TARGET main POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/lib/glew32.dll"
-            $<TARGET_FILE_DIR:main>)
+if (WIN32)
+    set_target_properties(glew32 PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/lib/libglew32.a)
 else ()
-    target_link_libraries(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/lib64/libGLEW.a)
+    set_target_properties(glew32 PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/lib64/libGLEW.a)
 endif ()
+
+set_target_properties(glew32 PROPERTIES INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/lib/GLEW/include)
+target_link_libraries(main PUBLIC glew32)
 
 if (WIN32)
     target_link_libraries(main PUBLIC opengl32)
@@ -74,16 +74,12 @@ target_link_libraries(main PRIVATE glm)
 
 # SDL2
 target_include_directories(main PRIVATE lib/SDL/include)
-if (WIN32)
-    target_link_libraries(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL/lib/libSDL2.dll.a)
-
-    add_custom_command(TARGET main POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL/bin/SDL2.dll"
-            $<TARGET_FILE_DIR:main>)
-else ()
-    target_link_libraries(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL/lib/libSDL2.so)
-endif ()
+execute_process(
+        COMMAND bash -c "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL/bin/sdl2-config --static-libs"
+        OUTPUT_VARIABLE SDLFLAGS
+)
+string(STRIP ${SDLFLAGS} SDLFLAGS)
+target_link_libraries(main PRIVATE ${SDLFLAGS})
 
 # Include MathFu in this project with test and benchmark builds disabled
 # then add MathFu compiler flags to the mygame build target.

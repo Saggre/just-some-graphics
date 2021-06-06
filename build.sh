@@ -39,13 +39,12 @@ function SDL() {
   cd libsrc/SDL/build || exit
 
   if [ "$1" == "win32" ]; then
-    ../configure --prefix="$dir" --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --build=x86_64-linux
+    ../configure --prefix="$dir" --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --build=x86_64-linux --enable-static --disable-shared
   else
     ../configure --prefix="$dir"
   fi
 
   make && make install
-  #cd - || exit
 }
 
 # Build Linux binary
@@ -62,7 +61,7 @@ function build_windows() {
   rm -rf build
   mkdir -p build
   cd build || exit
-  export CC="x86_64-w64-mingw32-gcc" && export CXX="x86_64-w64-mingw32-g++" && cmake .. -DWIN32=1
+  export CC="x86_64-w64-mingw32-gcc" && export CXX="x86_64-w64-mingw32-g++" && cmake .. -DWIN32=1 -DGLEW_STATIC=1
   make
 }
 
