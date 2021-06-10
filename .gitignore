@@ -1,4 +1,10 @@
+# IDE
 .idea
+
+# Act
+.secrets
+
+# Project
 cmake*
 build
 lib/GLEW
