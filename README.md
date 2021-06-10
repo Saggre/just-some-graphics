@@ -1,6 +1,6 @@
 # Just some graphics
 
-![Build Status](https://github.com/Saggre/just-some-graphics/workflows/build/badge.svg?style=flat-square)
+![Build Status](https://github.com/Saggre/just-some-graphics/workflows/Build%20release/badge.svg?style=flat-square)
 
 ## Building a new release with GitHub Actions
 
