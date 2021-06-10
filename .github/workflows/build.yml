@@ -15,6 +15,7 @@ jobs:
           submodules: recursive
 
       - name: Set up environment
+        id: setup-environment
         run: |
           apt-get update
           apt-get -y install cmake protobuf-compiler zip python
@@ -24,22 +25,25 @@ jobs:
           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Build for Linux
+        id: build-linux
         run: |
           "${GITHUB_WORKSPACE}/scripts/build.sh" -l -d -v
           cp -r "${GITHUB_WORKSPACE}/build/bin" "${GITHUB_WORKSPACE}/release/linux"
 
       - name: Build for Windows
+        id: build-windows
         run: |
           "${GITHUB_WORKSPACE}/scripts/build.sh" -w -d -v
           cp -r "${GITHUB_WORKSPACE}/build/bin" "${GITHUB_WORKSPACE}/release/win32"
 
       - name: Archive assets
+        id: archive-assets
         run: |
           (cd "${GITHUB_WORKSPACE}/release/win32" && zip -r release *)
           (cd "${GITHUB_WORKSPACE}/release/linux" && zip -r release *)
 
       - name: Create release
-        id: create_release
+        id: create-release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,7 +54,7 @@ jobs:
           prerelease: false
 
       - name: Upload Linux release asset as zip
-        id: upload-release-asset-zip
+        id: upload-linux-release-asset-zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,7 +65,7 @@ jobs:
           asset_content_type: application/zip
 
       - name: Upload Windows release asset as zip
-        id: upload-release-asset-zip
+        id: upload-windows-release-asset-zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
