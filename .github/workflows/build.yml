@@ -19,6 +19,7 @@ jobs:
           apt-get update
           apt-get -y install cmake protobuf-compiler
           apt-get -y install build-essential libxmu-dev libxi-dev libgl-dev
+          apt-get -y install libglu1-mesa-dev
           apt-get -y install python
       - name: Build for Linux
         run: |
