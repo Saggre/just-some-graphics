@@ -18,10 +18,10 @@ jobs:
         run: |
           apt-get update
           apt-get -y install cmake protobuf-compiler
-
+          apt-get -y install build-essential libxmu-dev libxi-dev libgl-dev
       - name: Build for Linux
         run: |
-          "${GITHUB_WORKSPACE}/scripts/build.sh" -l -d
+          "${GITHUB_WORKSPACE}/scripts/build.sh" -l -d -v
 
   release:
     runs-on: ubuntu-latest

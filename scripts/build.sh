@@ -2,6 +2,8 @@
 
 # Build GLEW dependency for target platform
 function GLEW() {
+  echo "Building GLEW"
+
   dir="$(pwd)/lib/GLEW"
 
   rm -rf "$dir"
@@ -29,8 +31,10 @@ function GLEW() {
 
 }
 
-# Build SDL dependency for target platform
+# Build SDL2 dependency for target platform
 function SDL() {
+  echo "Building SDL2"
+
   dir="$(pwd)/lib/SDL"
   rm -rf "$dir"
 
@@ -115,16 +119,16 @@ while test $# -gt 0; do
   esac
 done
 
-if [ $build_target == "win32" ]; then
-  echo "Building for Windows"
-else
-  echo "Building for Linux"
-fi
-
 if $build_deps; then
   # Build all dependencies
   (verb SDL "$build_target")
   (verb GLEW "$build_target")
+fi
+
+if [ $build_target == "win32" ]; then
+  echo "Building for Windows"
+else
+  echo "Building for Linux"
 fi
 
 # Build binary
