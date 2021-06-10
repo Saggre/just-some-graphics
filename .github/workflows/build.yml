@@ -21,7 +21,7 @@ jobs:
 
       - name: Build for Linux
         run: |
-          "${GITHUB_WORKSPACE}/scripts/build.sh" -l
+          "${GITHUB_WORKSPACE}/scripts/build.sh" -l -d
 
   release:
     runs-on: ubuntu-latest
