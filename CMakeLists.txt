@@ -6,7 +6,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 # Projects Settings
 cmake_minimum_required(VERSION 3.7)
-project(just-some-graphics)
+project(
+        just-some-graphics
+        DESCRIPTION "Just some graphics"
+        HOMEPAGE_URL "https://github.com/Saggre"
+)
+
 
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_CXX_STANDARD 17)
@@ -44,8 +49,9 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 add_dependencies(${PROJECT_NAME} embed_shader)
 include_directories(${PROJECT_SOURCE_DIR})
 
-if (POLICY CMP0072)
-    set(OpenGL_GL_PREFERENCE GLVND)
+if (WIN32)
+else ()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie")
 endif ()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
