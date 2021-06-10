@@ -4,13 +4,13 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
-#include <mathfu/matrix.h>
-#include <mathfu/glsl_mappings.h>
 #include <cmath>
 #include <mathfu/matrix.h>
 #include <mathfu/glsl_mappings.h>
-#include <src/core/components/creative_camera.hpp>
+#include <mathfu/matrix.h>
+#include <mathfu/glsl_mappings.h>
 
+#include "src/core/components/creative_camera.hpp"
 #include "src/core/application_core.hpp"
 #include "src/core/shader.hpp"
 #include "src/core/entity.hpp"

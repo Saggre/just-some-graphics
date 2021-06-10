@@ -42,6 +42,7 @@ add_executable(${PROJECT_NAME}
         src/core/util/print.hpp)
 
 add_dependencies(${PROJECT_NAME} embed_shader)
+include_directories(${PROJECT_SOURCE_DIR})
 
 if (POLICY CMP0072)
     set(OpenGL_GL_PREFERENCE GLVND)
@@ -69,10 +70,6 @@ if (WIN32)
 else ()
     target_link_libraries(${PROJECT_NAME} PUBLIC GL)
 endif ()
-
-# glm
-add_subdirectory(lib/glm EXCLUDE_FROM_ALL)
-target_link_libraries(${PROJECT_NAME} PRIVATE glm)
 
 # SDL2
 target_include_directories(${PROJECT_NAME} PRIVATE lib/SDL/include)
