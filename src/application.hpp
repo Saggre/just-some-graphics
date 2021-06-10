@@ -52,6 +52,8 @@ class Application : public ApplicationCore {
     auto sz = sizeof(Vertex);
     auto data = vertices.data();
 
+    glFrontFace(GL_CW);
+
     // Vertex buffer
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -70,6 +72,19 @@ class Application : public ApplicationCore {
 
     // bind vbo
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    //GLuint texture = Image::LoadBMP("textures/1024.bmp");
+    auto d = SDL_LoadBMP("textures/1024.bmp");
+    glEnable(GL_TEXTURE_2D);
+
+    GLuint textures;
+    glGenTextures(1, &textures);
+    glBindTexture(GL_TEXTURE_2D, textures);
+
+    //glTexImage2D(GL_TEXTURE_2D, 0, 3, d->w, d->h, 0, GL_BGRA);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, d->w, d->h, 0, GL_BGR, GL_UNSIGNED_BYTE, d->pixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     // map vbo to shader attributes
     shader_program->SetAttribute("position", 3, sizeof(Vertex), 0);
@@ -139,7 +154,7 @@ class Application : public ApplicationCore {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-    glDrawElements(GL_TRIANGLE_STRIP, mesh.GetVertices().size() * 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, mesh.GetVertices().size() * 3, GL_UNSIGNED_INT, nullptr);
 
     glBindVertexArray(0);
 
