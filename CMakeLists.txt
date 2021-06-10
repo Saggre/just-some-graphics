@@ -18,9 +18,7 @@ add_custom_target(
         COMMAND bash ${PROJECT_SOURCE_DIR}/scripts/embed_shaders.sh ${PROJECT_SOURCE_DIR}/src/embed_shader.hpp ${SHADERS_SOURCE_DIR}
 )
 
-# The main executable
-add_executable(${PROJECT_NAME}
-        src/main.cpp
+set(SOURCE_FILES src/main.cpp
         src/application.hpp
         src/core/application_core.hpp
         src/core/gl_error.hpp
@@ -40,6 +38,9 @@ add_executable(${PROJECT_NAME}
         src/core/image.hpp
         src/core/util/print.hpp)
 
+# The main executable
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+
 add_dependencies(${PROJECT_NAME} embed_shader)
 include_directories(${PROJECT_SOURCE_DIR})
 
@@ -47,7 +48,7 @@ if (POLICY CMP0072)
     set(OpenGL_GL_PREFERENCE GLVND)
 endif ()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
 target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
 

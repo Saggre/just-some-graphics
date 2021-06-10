@@ -57,7 +57,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ github.workspace }}/release/linux/release.zip
-          asset_name: ${{ github.event.repository.name }}-${{ env.RELEASE_VERSION }}-linux.zip
+          asset_name: just-some-graphics-${{ env.RELEASE_VERSION }}-linux.zip
           asset_content_type: application/zip
 
       - name: Upload Windows release asset as zip
@@ -68,5 +68,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ github.workspace }}/release/win32/release.zip
-          asset_name: ${{ github.event.repository.name }}-${{ env.RELEASE_VERSION }}-win64.zip # Yeah, it's actually a 64-bit binary
+          asset_name: just-some-graphics-${{ env.RELEASE_VERSION }}-win64.zip # Yeah, it's actually a 64-bit binary
           asset_content_type: application/zip

@@ -3,6 +3,7 @@
 
 #include <initializer_list>
 #include <map>
+#include <memory>
 #include <string>
 #include <mathfu/vector.h>
 #include <mathfu/quaternion.h>
@@ -20,44 +21,27 @@ class ShaderProgram;
 class Shader {
  public:
   /**
+   * Loads shader from GLSL source code
+   * @param source
+   * @param type
+   * @return
+   */
+  static inline Shader *FromSource(const char *source, GLenum type) {
+    return new Shader(source, type);
+  }
+
+  /**
    * Loads shader from a file
    * @param filename
    * @param type
+   * @return
    */
-  Shader(const std::string &filename, GLenum type) {
-    // file loading
+  static inline Shader *FromFile(const std::string &file_name, GLenum type) {
     std::vector<char> file_content;
-    GetFileContents(filename.c_str(), file_content);
+    GetFileContents(file_name.c_str(), file_content);
+    const char *shader_text(&file_content[0]);
 
-    // creation
-    handle = glCreateShader(type);
-    if (handle == 0)
-      throw std::runtime_error("[Error] Impossible to create a new Shader");
-
-    // code source assignation
-    const char *shaderText(&file_content[0]);
-    glShaderSource(handle, 1, (const GLchar **) &shaderText, nullptr);
-
-    // compilation
-    glCompileShader(handle);
-
-    // compilation check
-    GLint compile_status;
-    glGetShaderiv(handle, GL_COMPILE_STATUS, &compile_status);
-    if (compile_status != GL_TRUE) {
-      GLsizei logsize = 0;
-      glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &logsize);
-
-      char *log = new char[logsize + 1];
-      glGetShaderInfoLog(handle, logsize, &logsize, log);
-
-      std::cout << "[Error] compilation error: " << filename << std::endl;
-      std::cout << log << std::endl;
-
-      exit(EXIT_FAILURE);
-    } else {
-      std::cout << "[Info] Shader " << filename << " compiled successfully" << std::endl;
-    }
+    return new Shader(shader_text, type);
   }
 
   static void GetFileContents(const char *filename, std::vector<char> &buffer) {
@@ -83,6 +67,36 @@ class Shader {
   ~Shader() = default;
 
  private:
+  Shader(const char *source, GLenum type) {
+    handle = glCreateShader(type);
+    if (handle == 0)
+      throw std::runtime_error("[Error] Unable to create a new Shader");
+
+    // Source code assignation
+    glShaderSource(handle, 1, (const GLchar **) &source, nullptr);
+
+    // compilation
+    glCompileShader(handle);
+
+    // compilation check
+    GLint compile_status;
+    glGetShaderiv(handle, GL_COMPILE_STATUS, &compile_status);
+    if (compile_status != GL_TRUE) {
+      GLsizei logsize = 0;
+      glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &logsize);
+
+      char *log = new char[logsize + 1];
+      glGetShaderInfoLog(handle, logsize, &logsize, log);
+
+      std::cout << "[Error] Shader compilation error" << std::endl;
+      std::cout << log << std::endl;
+
+      exit(EXIT_FAILURE);
+    } else {
+      std::cout << "[Info] Shader compiled successfully" << std::endl;
+    }
+  }
+
   GLuint handle;
 
   friend class ShaderProgram;
@@ -93,9 +107,9 @@ class Shader {
  */
 class ShaderProgram {
  public:
-  ShaderProgram(std::initializer_list<Shader> shaderList) : ShaderProgram() {
-    for (auto &s : shaderList) {
-      glAttachShader(handle, s.GetHandle());
+  ShaderProgram(std::initializer_list<Shader *> shader_list) : ShaderProgram() {
+    for (auto &s : shader_list) {
+      glAttachShader(handle, s->GetHandle());
     }
 
     GetFileContents();

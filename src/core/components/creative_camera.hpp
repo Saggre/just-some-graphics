@@ -5,17 +5,16 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_CREATIVE_CAMERA_HPP_
 #define JUST_SOME_GRAPHICS_SRC_CREATIVE_CAMERA_HPP_
 
+#include <mathfu/vector.h>
+#include <mathfu/quaternion.h>
+#include <mathfu/glsl_mappings.h>
+#include <cmath>
+
 #include "component.hpp"
 #include "src/core/components/transform.hpp"
 #include "src/core/input_manager.hpp"
 #include "src/core/time.hpp"
 #include "src/core/util/print.hpp"
-
-#include <mathfu/vector.h>
-#include <mathfu/quaternion.h>
-#include <mathfu/glsl_mappings.h>
-#include <cmath>
-#include <src/application.hpp>
 
 /**
  * A "creative mode" camera, that can fly around

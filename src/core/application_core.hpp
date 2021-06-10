@@ -164,6 +164,7 @@ class ApplicationCore {
     }
 
     SDL_Quit();
+    End();
   }
 
   /**
@@ -277,6 +278,13 @@ class ApplicationCore {
 
   virtual void Start() {
     input_manager.Init(window);
+  }
+
+  /**
+   * End runtime
+   */
+  virtual void End() {
+
   }
 };
 

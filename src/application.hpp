@@ -1,19 +1,20 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_APPLICATION_HPP
 #define JUST_SOME_GRAPHICS_SRC_APPLICATION_HPP
 
+#include <cmath>
+#include <memory>
+
+#include <mathfu/matrix.h>
+#include <mathfu/glsl_mappings.h>
+#include <mathfu/matrix.h>
+#include <mathfu/glsl_mappings.h>
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
-#include <cmath>
-#include <mathfu/matrix.h>
-#include <mathfu/glsl_mappings.h>
-#include <mathfu/matrix.h>
-#include <mathfu/glsl_mappings.h>
-
-#include "src/core/components/creative_camera.hpp"
 #include "src/core/application_core.hpp"
 #include "src/core/shader.hpp"
 #include "src/core/entity.hpp"
+#include "src/core/components/creative_camera.hpp"
 #include "src/core/components/mesh.hpp"
 #include "src/core/gl_error.hpp"
 #include "src/core/entity.hpp"
@@ -22,15 +23,15 @@
 #include "src/core/util/mappings.hpp"
 #include "src/core/image.hpp"
 #include "src/core/util/print.hpp"
-
-#define SHADER_DIR "../shader/"
+#include "src/embed_shader.hpp"
 
 class Application : public ApplicationCore {
  public:
-  Application() : ApplicationCore(),
-                  vertex_shader(SHADER_DIR "shader.vert", GL_VERTEX_SHADER),
-                  fragment_shader(SHADER_DIR "shader.frag", GL_FRAGMENT_SHADER),
-                  shader_program({vertex_shader, fragment_shader}) {
+  Application() : ApplicationCore() {
+    vertex_shader = Shader::FromSource(shader_vert, GL_VERTEX_SHADER);
+    fragment_shader = Shader::FromSource(shader_frag, GL_FRAGMENT_SHADER);
+    shader_program = new ShaderProgram({vertex_shader, fragment_shader});
+
     // Test
     auto p = Primitive::Cube();
     mesh = Mesh::FromPrimitive(p);
@@ -71,9 +72,9 @@ class Application : public ApplicationCore {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     // map vbo to shader attributes
-    shader_program.SetAttribute("position", 3, sizeof(Vertex), 0);
-    shader_program.SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
-    shader_program.SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
+    shader_program->SetAttribute("position", 3, sizeof(Vertex), 0);
+    shader_program->SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
+    shader_program->SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
     // bind the ibo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -81,12 +82,13 @@ class Application : public ApplicationCore {
     // vao end
     glBindVertexArray(0);
 
-    // TODO load image
   }
 
-  ~Application() = default;
+  ~Application() =
+  default;
  protected:
-  void Loop() override {
+  void Loop()
+  override {
     ApplicationCore::Loop();
 
     // TODO move
@@ -125,12 +127,12 @@ class Application : public ApplicationCore {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader_program.Use();
+    shader_program->Use();
 
     // send uniforms
-    shader_program.SetUniform("projection", projection);
-    shader_program.SetUniform("view", view);
-    shader_program.SetUniform("model", model);
+    shader_program->SetUniform("projection", projection);
+    shader_program->SetUniform("view", view);
+    shader_program->SetUniform("model", model);
 
     glBindVertexArray(vao);
 
@@ -147,16 +149,26 @@ class Application : public ApplicationCore {
     SDL_GL_SwapWindow(window); // Update the window
   }
 
-  void Start() override {
+  void Start()
+  override {
     ApplicationCore::Start();
+  }
+
+  void End()
+  override {
+    delete vertex_shader;
+    delete fragment_shader;
+    delete shader_program;
+
+    ApplicationCore::End();
   }
 
  private:
   float time = 0.f;
 
-  Shader vertex_shader;
-  Shader fragment_shader;
-  ShaderProgram shader_program;
+  Shader *vertex_shader;
+  Shader *fragment_shader;
+  ShaderProgram *shader_program;
 
   mathfu::mat4 projection = mathfu::mat4::Identity();
   mathfu::mat4 view = mathfu::mat4::Identity();

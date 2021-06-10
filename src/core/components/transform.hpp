@@ -5,13 +5,13 @@
 #ifndef JUST_SOME_GRAPHICS_SRC_TRANSFORM_HPP_
 #define JUST_SOME_GRAPHICS_SRC_TRANSFORM_HPP_
 
-#include "src/core/components/component.hpp"
-#include "src/core/input_manager.hpp"
-
 #include <mathfu/vector.h>
 #include <mathfu/quaternion.h>
 #include <mathfu/glsl_mappings.h>
 #include <cmath>
+
+#include "src/core/components/component.hpp"
+#include "src/core/input_manager.hpp"
 
 /**
  * A class that contains movement-related stuff
