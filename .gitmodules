@@ -4,9 +4,12 @@
 [submodule "lib/gainput"]
 	path = lib/gainput
 	url = git@github.com:jkuhlmann/gainput.git
-[submodule "lib/SDL2"]
-	path = lib/SDL2
-	url = git@github.com:libsdl-org/SDL.git
+[submodule "lib/mathfu"]
+	path = lib/mathfu
+	url = git@github.com:google/mathfu.git
 [submodule "libsrc/GLEW"]
 	path = libsrc/GLEW
 	url = git@github.com:nigels-com/glew.git
+[submodule "libsrc/SDL"]
+	path = libsrc/SDL
+	url = git@github.com:libsdl-org/SDL.git
