@@ -9,23 +9,26 @@ function GLEW() {
   rm -rf "$dir"
   cd libsrc/GLEW || exit
 
+  # https://github.com/nigels-com/glew/issues/31
+  make extensions
+
   if [ "$1" == "win32" ]; then
     make SYSTEM=linux-mingw64 \
       CC=x86_64-w64-mingw32-gcc LD=x86_64-w64-mingw32-ld \
-      LDFLAGS.EXTRA=-L"${dir}"/lib \
+      LDFLAGS.EXTRA=-L"${dir}/lib" \
       GLEW_PREFIX="${dir}" \
       GLEW_DEST="${dir}"
 
     make SYSTEM=linux-mingw64 \
       CC=x86_64-w64-mingw32-gcc LD=x86_64-w64-mingw32-ld \
-      LDFLAGS.EXTRA=-L"${dir}"/lib \
+      LDFLAGS.EXTRA=-L"${dir}/lib" \
       GLEW_PREFIX="${dir}" \
       GLEW_DEST="${dir}" install
   else
-    make LDFLAGS.EXTRA=-L"${dir}"/lib \
+    make LDFLAGS.EXTRA=-L"${dir}/lib" \
       GLEW_DEST="${dir}"
 
-    make LDFLAGS.EXTRA=-L"${dir}"/lib \
+    make LDFLAGS.EXTRA=-L"${dir}/lib" \
       GLEW_DEST="${dir}" install
   fi
 
