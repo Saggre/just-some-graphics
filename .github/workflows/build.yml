@@ -21,16 +21,17 @@ jobs:
           apt-get -y install build-essential libxmu-dev libxi-dev libgl-dev libglu1-mesa-dev
           apt-get -y install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
           mkdir -p "${GITHUB_WORKSPACE}/release"
+          mkdir -p "${GITHUB_WORKSPACE}/release/win32" && touch "${GITHUB_WORKSPACE}/release/win32/test.exe"
 
-      - name: Build for Linux
-        run: |
-          "${GITHUB_WORKSPACE}/scripts/build.sh" -l -d -v
-          cp -r "${GITHUB_WORKSPACE}/build/bin" "${GITHUB_WORKSPACE}/release/linux"
+     # - name: Build for Linux
+          #   run: |
+          #    "${GITHUB_WORKSPACE}/scripts/build.sh" -l -d -v
+      #    cp -r "${GITHUB_WORKSPACE}/build/bin" "${GITHUB_WORKSPACE}/release/linux"
 
-      - name: Build for Windows
-        run: |
-          "${GITHUB_WORKSPACE}/scripts/build.sh" -w -d -v
-          cp -r "${GITHUB_WORKSPACE}/build/bin" "${GITHUB_WORKSPACE}/release/win32"
+        # - name: Build for Windows
+          #    run: |
+          #     "${GITHUB_WORKSPACE}/scripts/build.sh" -w -d -v
+      #     cp -r "${GITHUB_WORKSPACE}/build/bin" "${GITHUB_WORKSPACE}/release/win32"
 
       - name: Archive assets
         run: |
