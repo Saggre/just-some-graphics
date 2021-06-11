@@ -15,7 +15,6 @@ layout(location = 0) out vec4 fColor;
 
 void main() {
     fColor = vec4(texture(myTextureSampler, fTexCoord).rgb, 1);
-    fColor.r = mainCameraPos.x;
 }
 )"""";
 
@@ -26,9 +25,9 @@ in vec3 vPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
 
-out vec2 fTexCoord;
-out vec3 fNormal;
-out vec3 fViewDir;
+out vec2 fTexCoord;// Fragment UV coordinate
+out vec3 fNormal;// Fragment surface normal
+out vec3 fViewDir;// Direction from main camera to fragment
 
 uniform vec3 mainCameraPos;
 uniform mat4 mProjection;
