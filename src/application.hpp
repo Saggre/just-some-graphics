@@ -22,7 +22,6 @@
 #include "src/core/util/primitive.hpp"
 #include "src/core/util/mappings.hpp"
 #include "src/core/image.hpp"
-#include "src/core/util/print.hpp"
 #include "src/embed_shader.hpp"
 
 class Application : public ApplicationCore {
@@ -133,8 +132,6 @@ class Application : public ApplicationCore {
         1
     );
 
-    //Print::pos(entity.transform_.GetPosition());
-
     model = mathfu::mat4::Identity();
 
     // clear
@@ -179,8 +176,6 @@ class Application : public ApplicationCore {
   }
 
  private:
-  float time = 0.f;
-
   Shader *vertex_shader;
   Shader *fragment_shader;
   ShaderProgram *shader_program;

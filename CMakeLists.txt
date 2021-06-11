@@ -40,8 +40,8 @@ set(SOURCE_FILES src/main.cpp
         src/core/util/primitive.hpp
         src/core/util/mappings.hpp
         src/core/image.hpp
-        src/core/image.hpp
-        src/core/util/print.hpp)
+        src/core/functions/core.hpp
+        src/core/functions/print.hpp)
 
 # The main executable
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
