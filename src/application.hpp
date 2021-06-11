@@ -35,7 +35,7 @@ class Application : public ApplicationCore {
     auto p = Primitive::Cube();
     mesh = Mesh::FromPrimitive(p);
     entity.transform_.SetPosition(mathfu::vec3(0, 0, -15));
-    entity.AddComponent(&mesh);
+    entity.AddComponent(&mesh); // TODO mesh component should be in another entity..
     entity.AddComponent(&creative_camera);
     entity.Start();
 
@@ -86,9 +86,9 @@ class Application : public ApplicationCore {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     // map vbo to shader attributes
-    shader_program->SetAttribute("position", 3, sizeof(Vertex), 0);
-    shader_program->SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
-    shader_program->SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
+    shader_program->SetAttribute("vPosition", 3, sizeof(Vertex), 0);
+    shader_program->SetAttribute("vNormal", 3, sizeof(Vertex), offsetof(Vertex, normal));
+    shader_program->SetAttribute("vTexCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
     // bind the ibo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -134,6 +134,8 @@ class Application : public ApplicationCore {
 
     model = mathfu::mat4::Identity();
 
+    mathfu::mat4 normal = (view * model).Inverse().Transpose();
+
     // clear
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -141,10 +143,12 @@ class Application : public ApplicationCore {
 
     shader_program->Use();
 
-    // send uniforms
-    shader_program->SetUniform("projection", projection);
-    shader_program->SetUniform("view", view);
-    shader_program->SetUniform("model", model);
+    // Send uniforms
+    shader_program->SetUniform("mainCameraPos", entity.transform_.GetPosition());
+    shader_program->SetUniform("mProjection", projection);
+    shader_program->SetUniform("mView", view);
+    shader_program->SetUniform("mModel", model);
+    shader_program->SetUniform("mNormal", normal);
 
     glBindVertexArray(vao);
 
