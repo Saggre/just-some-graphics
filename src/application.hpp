@@ -134,7 +134,7 @@ class Application : public ApplicationCore {
 
     model = mathfu::mat4::Identity();
 
-    mathfu::mat4 normal = (view * model).Inverse().Transpose();
+    //mathfu::mat4 normal = (view * model).Inverse().Transpose();
 
     // clear
     glClear(GL_COLOR_BUFFER_BIT);
@@ -144,11 +144,12 @@ class Application : public ApplicationCore {
     shader_program->Use();
 
     // Send uniforms
+    shader_program->SetUniform("iTime", GetTime());
     shader_program->SetUniform("mainCameraPos", entity.transform_.GetPosition());
     shader_program->SetUniform("mProjection", projection);
     shader_program->SetUniform("mView", view);
     shader_program->SetUniform("mModel", model);
-    shader_program->SetUniform("mNormal", normal);
+    //shader_program->SetUniform("mNormal", normal);
 
     glBindVertexArray(vao);
 

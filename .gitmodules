@@ -10,3 +10,18 @@
 [submodule "libsrc/SDL"]
 	path = libsrc/SDL
 	url = git@github.com:libsdl-org/SDL.git
+[submodule "libsrc/soil"]
+	path = libsrc/soil
+	url = git@github.com:littlstar/soil.git
+[submodule "libsrc/SDL_image"]
+	path = libsrc/SDL_image
+	url = git@github.com:libsdl-org/SDL_image.git
+[submodule "libsrc/zlib"]
+	path = libsrc/zlib
+	url = git@github.com:madler/zlib.git
+[submodule "libsrc/libpng"]
+	path = libsrc/libpng
+	url = git@github.com:glennrp/libpng.git
+[submodule "libsrc/libjpeg-turbo"]
+	path = libsrc/libjpeg-turbo
+	url = git@github.com:libjpeg-turbo/libjpeg-turbo.git
