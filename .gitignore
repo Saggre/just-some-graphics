@@ -7,5 +7,6 @@
 # Project
 cmake*
 build
-lib/GLEW
-lib/SDL
+lib/*
+!lib/mathfu
+!lib/gainput
