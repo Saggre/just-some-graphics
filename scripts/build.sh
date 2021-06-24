@@ -116,6 +116,38 @@ function zlib() {
   make && make install
 }
 
+function libpng() {
+  echo "Building libpng"
+
+  dest="$(pwd)/lib/libpng"
+
+  prepare_build_dirs libsrc/libpng "$dest"
+
+  if [ "$1" == "win32" ]; then
+    export CC="x86_64-w64-mingw32" && ../configure --prefix="$dest"
+  else
+    ../configure --prefix="$dest"
+  fi
+
+  make && make install
+}
+
+function libjpeg() {
+  echo "Building libjpeg"
+
+  dest="$(pwd)/lib/libjpeg"
+
+  prepare_build_dirs libsrc/libjpeg-turbo "$dest"
+
+  if [ "$1" == "win32" ]; then
+    export CC="x86_64-w64-mingw32" && ../configure --prefix="$dest"
+  else
+    ../configure --prefix="$dest"
+  fi
+
+  make && make install
+}
+
 # Clears, creates and enters build and destination dirs
 function prepare_build_dirs() {
   lib_src=$1
@@ -172,7 +204,7 @@ while test $# -gt 0; do
     exit 0
     ;;
   -t | --test)
-    (verb zlib "$build_target")
+    (verb libjpeg "$build_target")
     exit 0
     ;;
   -v | --verbose)

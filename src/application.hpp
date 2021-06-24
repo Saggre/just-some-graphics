@@ -9,6 +9,7 @@
 #include <mathfu/matrix.h>
 #include <mathfu/glsl_mappings.h>
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
 #include <GL/glew.h>
 
 #include "src/core/application_core.hpp"

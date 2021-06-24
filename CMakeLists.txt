@@ -23,6 +23,12 @@ add_custom_target(
         COMMAND bash ${PROJECT_SOURCE_DIR}/scripts/embed_shaders.sh ${PROJECT_SOURCE_DIR}/src/embed_shader.hpp ${SHADERS_SOURCE_DIR}
 )
 
+include_directories("${PROJECT_SOURCE_DIR}/lib/win")
+if (WIN32)
+    add_library(SDL2_image SHARED IMPORTED GLOBAL)
+    set_target_properties(SDL2_image PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/lib/win/SDL2_image.dll)
+endif ()
+
 set(SOURCE_FILES src/main.cpp
         src/application.hpp
         src/core/application_core.hpp
@@ -90,6 +96,20 @@ execute_process(
 )
 string(STRIP ${SDLFLAGS} SDLFLAGS)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDLFLAGS})
+
+#target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/SDL2)
+
+# SDL2_image
+if (WIN32)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${PROJECT_SOURCE_DIR}/lib/win"
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image)
+else ()
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image)
+endif ()
 
 # Include MathFu in this project with test and benchmark builds disabled
 # then add MathFu compiler flags to the mygame build target.
