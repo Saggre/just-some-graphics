@@ -100,6 +100,35 @@ function soil() {
   make && make install
 }
 
+function zlib() {
+  echo "Building zlib"
+
+  dest="$(pwd)/lib/zlib"
+
+  prepare_build_dirs libsrc/zlib "$dest"
+
+  if [ "$1" == "win32" ]; then
+    export CC="x86_64-w64-mingw32" && ../configure --prefix="$dest"
+  else
+    ../configure --prefix="$dest"
+  fi
+
+  make && make install
+}
+
+# Clears, creates and enters build and destination dirs
+function prepare_build_dirs() {
+  lib_src=$1
+  lib_dest=$2
+
+  rm -rf "$lib_dest"
+  mkdir -p -- "$lib_dest" "$lib_dest/lib"
+
+  [ -d "$lib_src/build" ] && rm -rf "$lib_src/build"
+  mkdir -p "$lib_src/build"
+  cd "$lib_src/build" || exit
+}
+
 # Build Linux binary
 function build_linux() {
   rm -rf build
@@ -143,7 +172,7 @@ while test $# -gt 0; do
     exit 0
     ;;
   -t | --test)
-    (verb SDL_image "$build_target")
+    (verb zlib "$build_target")
     exit 0
     ;;
   -v | --verbose)
