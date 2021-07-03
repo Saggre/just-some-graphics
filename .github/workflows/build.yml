@@ -19,7 +19,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -y install cmake protobuf-compiler zip python
-          sudo apt-get -y install build-essential libxmu-dev libxi-dev libgl-dev libglu1-mesa-dev
+          sudo apt-get -y install build-essential libxmu-dev libxi-dev libgl-dev libglu1-mesa-dev libsdl2-image-dev
           sudo apt-get -y install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
           mkdir -p "${GITHUB_WORKSPACE}/release"
           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV

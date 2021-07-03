@@ -16,7 +16,7 @@ Supports building for Linux and Windows, but binaries can only be built on Linux
 ```bash
 sudo apt-get update
 sudo apt-get -y install cmake python
-sudo apt-get -y install build-essential libxmu-dev libxi-dev libgl-dev libglu1-mesa-dev
+sudo apt-get -y install build-essential libxmu-dev libxi-dev libgl-dev libglu1-mesa-dev libsdl2-image-dev
 ```
 
 Additional requirements for Windows:

@@ -8,5 +8,6 @@
 cmake*
 build
 lib/*
+!lib/win
 !lib/mathfu
 !lib/gainput
