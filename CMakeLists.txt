@@ -97,7 +97,7 @@ execute_process(
 string(STRIP ${SDLFLAGS} SDLFLAGS)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDLFLAGS})
 
-#target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/SDL2)
+target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/SDL2)
 
 # SDL2_image
 if (WIN32)
