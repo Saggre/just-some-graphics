@@ -11,10 +11,11 @@
 #include <cmath>
 
 #include "component.hpp"
+#include "src/core/functions/core.hpp"
 #include "src/core/components/transform.hpp"
 #include "src/core/input_manager.hpp"
 #include "src/core/time.hpp"
-#include "src/core/util/print.hpp"
+#include "src/core/functions/print.hpp"
 
 /**
  * A "creative mode" camera, that can fly around
@@ -26,7 +27,8 @@ class CreativeCamera : public Component {
   }
 
   void Update() override {
-    float speed = 0.33f;
+    float delta_time = GetDeltaTime();
+    float speed = delta_time * 7.0f;
 
     auto move_delta = mathfu::vec3(0, 0, 0);
 
@@ -65,8 +67,7 @@ class CreativeCamera : public Component {
     transform->Move(move_delta * speed);
 
     auto mouse_delta = InputManager::GetMouseDelta();
-    Print::pos(mouse_delta);
-    float sens = 0.0005;
+    float sens = delta_time * 10.0f;
 
     const float MIN_Y = -M_PI * 0.5 + 0.01;
     const float MAX_Y = M_PI * 0.5 - 0.01;

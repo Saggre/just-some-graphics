@@ -31,7 +31,6 @@ function GLEW() {
     make LDFLAGS.EXTRA=-L"${dir}/lib" \
       GLEW_DEST="${dir}" install
   fi
-
 }
 
 # Build SDL2 dependency for target platform
@@ -52,6 +51,114 @@ function SDL() {
   fi
 
   make && make install
+}
+
+# Build SDL_image dependency for target platform
+function SDL_image() {
+  echo "Building SDL_image"
+
+  config_dir="$(pwd)/lib/SDL/bin/sdl2-config"
+  dest_dir="$(pwd)/lib/SDL_image"
+  rm -rf "$dest_dir"
+
+  [ -d libsrc/SDL_image/build ] && rm -rf libsrc/SDL_image/build
+  mkdir -p libsrc/SDL_image/build
+  cd libsrc/SDL_image/build || exit
+
+  ../autogen.sh
+
+  if [ "$1" == "win32" ]; then
+    export CC="x86_64-w64-mingw32-gcc -static-libgcc"
+    export SDL2_CONFIG="$config_dir"
+    ../configure --prefix="$dest_dir" --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --build=x86_64-linux --disable-webp
+  else
+    export CC="gcc -static-libgcc"
+    export SDL2_CONFIG="$config_dir"
+    ../configure --prefix="$dest_dir" --build=x86_64-linux --disable-webp
+  fi
+
+  make && make install
+}
+
+# Build soil dependency for target platform
+function soil() {
+  echo "Building soil"
+
+  dir="$(pwd)/lib/soil"
+  rm -rf "$dir"
+  mkdir -p -- "$dir" "$dir/lib"
+
+  [ -d libsrc/soil/build ] && rm -rf libsrc/soil/build && rm -f libsrc/soil/Makefile
+  cd libsrc/soil || exit
+
+  if [ "$1" == "win32" ]; then
+    export CC="x86_64-w64-mingw32" && ./configure --prefix="$dir"
+  else
+    ./configure --prefix="$dir"
+  fi
+
+  make && make install
+}
+
+function zlib() {
+  echo "Building zlib"
+
+  dest="$(pwd)/lib/zlib"
+
+  prepare_build_dirs libsrc/zlib "$dest"
+
+  if [ "$1" == "win32" ]; then
+    export CC="x86_64-w64-mingw32" && ../configure --prefix="$dest"
+  else
+    ../configure --prefix="$dest"
+  fi
+
+  make && make install
+}
+
+function libpng() {
+  echo "Building libpng"
+
+  dest="$(pwd)/lib/libpng"
+
+  prepare_build_dirs libsrc/libpng "$dest"
+
+  if [ "$1" == "win32" ]; then
+    export CC="x86_64-w64-mingw32" && ../configure --prefix="$dest"
+  else
+    ../configure --prefix="$dest"
+  fi
+
+  make && make install
+}
+
+function libjpeg() {
+  echo "Building libjpeg"
+
+  dest="$(pwd)/lib/libjpeg"
+
+  prepare_build_dirs libsrc/libjpeg-turbo "$dest"
+
+  if [ "$1" == "win32" ]; then
+    export CC="x86_64-w64-mingw32" && ../configure --prefix="$dest"
+  else
+    ../configure --prefix="$dest"
+  fi
+
+  make && make install
+}
+
+# Clears, creates and enters build and destination dirs
+function prepare_build_dirs() {
+  lib_src=$1
+  lib_dest=$2
+
+  rm -rf "$lib_dest"
+  mkdir -p -- "$lib_dest" "$lib_dest/lib"
+
+  [ -d "$lib_src/build" ] && rm -rf "$lib_src/build"
+  mkdir -p "$lib_src/build"
+  cd "$lib_src/build" || exit
 }
 
 # Build Linux binary
@@ -97,7 +204,7 @@ while test $# -gt 0; do
     exit 0
     ;;
   -t | --test)
-    (verb GLEW "$build_target")
+    (verb libjpeg "$build_target")
     exit 0
     ;;
   -v | --verbose)
@@ -126,6 +233,7 @@ if $build_deps; then
   # Build all dependencies
   (verb SDL "$build_target")
   (verb GLEW "$build_target")
+  (verb soil "$build_target")
 fi
 
 if [ $build_target == "win32" ]; then

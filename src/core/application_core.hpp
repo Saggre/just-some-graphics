@@ -21,7 +21,7 @@ class ApplicationCore {
   SDL_Window *window;
 
   ApplicationCore() : state(stateReady), title("ApplicationCore") {
-    currentApplication = this;
+    instance = this;
     dimension_changed = false;
 
     std::cout << "[Info]: SDL initialisation" << std::endl;
@@ -36,7 +36,7 @@ class ApplicationCore {
     width = DM.w;
     height = DM.h;
 
-    fullscreen = false;
+    fullscreen = true;
     if (!fullscreen) {
       width = 1000;
       height = 600;
@@ -54,6 +54,8 @@ class ApplicationCore {
                               width,
                               height,
                               SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+
+    SDL_SetWindowTitle(window, "Just some graphics");
 
     if (!window) {
       SDL_Quit();
@@ -93,19 +95,17 @@ class ApplicationCore {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
-
-    /*glMatrixMode(GL_PROJECTION_MATRIX);
-    glLoadIdentity();
-    glMatrixMode(GL_MODELVIEW_MATRIX);
-    glLoadIdentity();
-    glViewport(0, 0, width, height);*/
   }
 
-  static ApplicationCore &getInstance() {
-    if (currentApplication) {
-      return *currentApplication;
+  /**
+   * Get core instance
+   * @return
+   */
+  static ApplicationCore &Instance() {
+    if (instance) {
+      return *instance;
     } else {
-      throw std::runtime_error("There is no current ApplicationCore");
+      throw std::runtime_error("There is no current ApplicationCore instance");
     }
   }
 
@@ -122,26 +122,26 @@ class ApplicationCore {
   }
 
   /**
-   * Close window
+   * Close the window
    */
   void Exit() {
     state = stateExit;
   }
 
   /**
-   * Get current running time
+   * Get current running time in seconds
    * @return
    */
-  static float GetTime() {
-    return (float) SDL_GetTicks();// TODO check scale
+  float GetTime() {
+    return static_cast<float>(SDL_GetTicks()) * 0.001;
   }
 
   /**
-   * Get current delta time
+   * Get current delta time in seconds
    * @return
    */
-  static float GetDeltaTime() {
-    return 0.02; // TODO
+  float GetDeltaTime() {
+    return static_cast<float>(frame_times.GetDelta()) * 0.001;
   }
 
   /**
@@ -201,18 +201,12 @@ class ApplicationCore {
 
  private:
   enum State { stateReady, stateRun, stateExit };
-
   State state;
-
   ApplicationCore &operator=(const ApplicationCore &) { return *this; }
   SDL_Renderer *renderer;
   SDL_GLContext context;
 
   std::vector<AbstractUpdatable *> entities_;
-  std::vector<int> test_;
-
-  inline static Time time_;
-
   std::bitset<64> engine_flags_;
 
   int width;
@@ -235,13 +229,15 @@ class ApplicationCore {
   }
 
  protected:
-  // ApplicationCore(const ApplicationCore &);
-  inline static ApplicationCore *currentApplication = nullptr;
+  inline static ApplicationCore *instance = nullptr;
   InputManager input_manager;
+  MultiFrameData<uint32_t> frame_times;
   std::string title;
   bool fullscreen = true;
 
   virtual void Loop() {
+    frame_times.Update(SDL_GetTicks());
+
     SDL_Event sdlEvent;
     while (SDL_PollEvent(&sdlEvent)) {
       if (sdlEvent.type == SDL_QUIT) {
@@ -263,11 +259,6 @@ class ApplicationCore {
     // Reference to a pointer
     for (auto &entity : entities_) {
       entity->Update();
-    }
-
-    if (InputManager::IsKeyDown(InputManager::Down)) {
-      // TODO remove debug
-      std::cout << "Keypress\n";
     }
 
     if (InputManager::IsKeyDown(InputManager::Esc)) {

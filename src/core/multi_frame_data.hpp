@@ -71,7 +71,7 @@ class MultiFrameData {
    * Default delta calculation formula
    */
   DeltaCalc delta_calc_ = [](T current, T last) {
-    return last - current;
+    return current - last;
   };
 
   T current_frame_;

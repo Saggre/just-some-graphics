@@ -23,38 +23,35 @@ struct Primitive {
     Primitive primitive;
 
     primitive.indices = std::vector<Index>{
-        2, 1, 0, 3, 2, 1,
-        8, 9, 2, 4, 2, 9,
-        2, 4, 3, 5, 3, 4,
-        3, 5, 10, 11, 10, 5,
-        4, 6, 5, 7, 5, 6,
-        0, 7, 6, 1, 7, 0
+        0, 2, 3, 0, 3, 1, 8, 4, 5, 8, 5, 9, 10, 6, 7, 10, 7, 11, 12, 13,
+        14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23
     };
 
-    /*auto vertices = std::vector<Vector3>{
-        Vector3(1.0, 1.0, 1.0),
-        Vector3(0.0f, 1.0, 1.0),
-        Vector3(1.0, 1.0, 0.0f),
-        Vector3(0.0f, 1.0, 0.0f),
-        Vector3(1.0, 0.0f, 1.0),
-        Vector3(0.0f, 0.0f, 1.0),
-        Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(1.0, 0.0f, 0.0f)
-    };*/
-
     primitive.vertices = std::vector<Vertex>{
-        {Vector3(-1, 1, 1), Vector3(0, 0, 0), Vector2(0, 0)},
-        {Vector3(1, 1, 1), Vector3(0, 0, 0), Vector2(1, 0)},
-        {Vector3(-1, -1, 1), Vector3(0, 0, 0), Vector2(0, 1)},
-        {Vector3(1, -1, 1), Vector3(0, 0, 0), Vector2(1, 1)},
-        {Vector3(-1, -1, -1), Vector3(0, 0, 0), Vector2(0, 0)},
-        {Vector3(1, -1, -1), Vector3(0, 0, 0), Vector2(1, 0)},
-        {Vector3(-1, 1, -1), Vector3(0, 0, 0), Vector2(0, 1)},
-        {Vector3(1, 1, -1), Vector3(0, 0, 0), Vector2(1, 1)},
-        {Vector3(-1, 1, 1), Vector3(0, 0, 0), Vector2(1, 1)},
-        {Vector3(-1, 1, -1), Vector3(0, 0, 0), Vector2(1, 0)},
-        {Vector3(1, 1, 1), Vector3(0, 0, 0), Vector2(0, 1)},
-        {Vector3(1, 1, -1), Vector3(0, 0, 0), Vector2(0, 0)}
+        {Vector3(0.5, -0.5, 0.5), Vector3(0.0, 0.0, 1.0), Vector2(0.0, 0.0)},
+        {Vector3(-0.5, -0.5, 0.5), Vector3(0.0, 0.0, 1.0), Vector2(1.0, 0.0)},
+        {Vector3(0.5, 0.5, 0.5), Vector3(0.0, 0.0, 1.0), Vector2(0.0, 1.0)},
+        {Vector3(-0.5, 0.5, 0.5), Vector3(0.0, 0.0, 1.0), Vector2(1.0, 1.0)},
+        {Vector3(0.5, 0.5, -0.5), Vector3(0.0, 1.0, 0.0), Vector2(0.0, 1.0)},
+        {Vector3(-0.5, 0.5, -0.5), Vector3(0.0, 1.0, 0.0), Vector2(1.0, 1.0)},
+        {Vector3(0.5, -0.5, -0.5), Vector3(0.0, 0.0, -1.0), Vector2(0.0, 1.0)},
+        {Vector3(-0.5, -0.5, -0.5), Vector3(0.0, 0.0, -1.0), Vector2(1.0, 1.0)},
+        {Vector3(0.5, 0.5, 0.5), Vector3(0.0, 1.0, 0.0), Vector2(0.0, 0.0)},
+        {Vector3(-0.5, 0.5, 0.5), Vector3(0.0, 1.0, 0.0), Vector2(1.0, 0.0)},
+        {Vector3(0.5, 0.5, -0.5), Vector3(0.0, 0.0, -1.0), Vector2(0.0, 0.0)},
+        {Vector3(-0.5, 0.5, -0.5), Vector3(0.0, 0.0, -1.0), Vector2(1.0, 0.0)},
+        {Vector3(0.5, -0.5, -0.5), Vector3(0.0, -1.0, 0.0), Vector2(0.0, 0.0)},
+        {Vector3(0.5, -0.5, 0.5), Vector3(0.0, -1.0, 0.0), Vector2(0.0, 1.0)},
+        {Vector3(-0.5, -0.5, 0.5), Vector3(0.0, -1.0, 0.0), Vector2(1.0, 1.0)},
+        {Vector3(-0.5, -0.5, -0.5), Vector3(0.0, -1.0, 0.0), Vector2(1.0, 0.0)},
+        {Vector3(-0.5, -0.5, 0.5), Vector3(-1.0, 0.0, 0.0), Vector2(0.0, 0.0)},
+        {Vector3(-0.5, 0.5, 0.5), Vector3(-1.0, 0.0, 0.0), Vector2(0.0, 1.0)},
+        {Vector3(-0.5, 0.5, -0.5), Vector3(-1.0, 0.0, 0.0), Vector2(1.0, 1.0)},
+        {Vector3(-0.5, -0.5, -0.5), Vector3(-1.0, 0.0, 0.0), Vector2(1.0, 0.0)},
+        {Vector3(0.5, -0.5, -0.5), Vector3(1.0, 0.0, 0.0), Vector2(0.0, 0.0)},
+        {Vector3(0.5, 0.5, -0.5), Vector3(1.0, 0.0, 0.0), Vector2(0.0, 1.0)},
+        {Vector3(0.5, 0.5, 0.5), Vector3(1.0, 0.0, 0.0), Vector2(1.0, 1.0)},
+        {Vector3(0.5, -0.5, 0.5), Vector3(1.0, 0.0, 0.0), Vector2(1.0, 0.0)}
     };
 
     return primitive;

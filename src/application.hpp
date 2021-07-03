@@ -9,6 +9,7 @@
 #include <mathfu/matrix.h>
 #include <mathfu/glsl_mappings.h>
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
 #include <GL/glew.h>
 
 #include "src/core/application_core.hpp"
@@ -22,7 +23,6 @@
 #include "src/core/util/primitive.hpp"
 #include "src/core/util/mappings.hpp"
 #include "src/core/image.hpp"
-#include "src/core/util/print.hpp"
 #include "src/embed_shader.hpp"
 
 class Application : public ApplicationCore {
@@ -36,7 +36,7 @@ class Application : public ApplicationCore {
     auto p = Primitive::Cube();
     mesh = Mesh::FromPrimitive(p);
     entity.transform_.SetPosition(mathfu::vec3(0, 0, -15));
-    entity.AddComponent(&mesh);
+    entity.AddComponent(&mesh); // TODO mesh component should be in another entity..
     entity.AddComponent(&creative_camera);
     entity.Start();
 
@@ -51,6 +51,8 @@ class Application : public ApplicationCore {
 
     auto sz = sizeof(Vertex);
     auto data = vertices.data();
+
+    glFrontFace(GL_CW);
 
     // Vertex buffer
     glGenBuffers(1, &vbo);
@@ -71,10 +73,23 @@ class Application : public ApplicationCore {
     // bind vbo
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+    //GLuint texture = Image::LoadBMP("textures/1024.bmp");
+    auto d = SDL_LoadBMP("textures/1024.bmp");
+    glEnable(GL_TEXTURE_2D);
+
+    GLuint textures;
+    glGenTextures(1, &textures);
+    glBindTexture(GL_TEXTURE_2D, textures);
+
+    //glTexImage2D(GL_TEXTURE_2D, 0, 3, d->w, d->h, 0, GL_BGRA);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, d->w, d->h, 0, GL_BGR, GL_UNSIGNED_BYTE, d->pixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
     // map vbo to shader attributes
-    shader_program->SetAttribute("position", 3, sizeof(Vertex), 0);
-    shader_program->SetAttribute("normal", 3, sizeof(Vertex), offsetof(Vertex, normal));
-    shader_program->SetAttribute("texCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
+    shader_program->SetAttribute("vPosition", 3, sizeof(Vertex), 0);
+    shader_program->SetAttribute("vNormal", 3, sizeof(Vertex), offsetof(Vertex, normal));
+    shader_program->SetAttribute("vTexCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
     // bind the ibo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -118,9 +133,9 @@ class Application : public ApplicationCore {
         1
     );
 
-    //Print::pos(entity.transform_.GetPosition());
-
     model = mathfu::mat4::Identity();
+
+    //mathfu::mat4 normal = (view * model).Inverse().Transpose();
 
     // clear
     glClear(GL_COLOR_BUFFER_BIT);
@@ -129,17 +144,20 @@ class Application : public ApplicationCore {
 
     shader_program->Use();
 
-    // send uniforms
-    shader_program->SetUniform("projection", projection);
-    shader_program->SetUniform("view", view);
-    shader_program->SetUniform("model", model);
+    // Send uniforms
+    shader_program->SetUniform("iTime", GetTime());
+    shader_program->SetUniform("mainCameraPos", entity.transform_.GetPosition());
+    shader_program->SetUniform("mProjection", projection);
+    shader_program->SetUniform("mView", view);
+    shader_program->SetUniform("mModel", model);
+    //shader_program->SetUniform("mNormal", normal);
 
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-    glDrawElements(GL_TRIANGLE_STRIP, mesh.GetVertices().size() * 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, mesh.GetVertices().size() * 3, GL_UNSIGNED_INT, nullptr);
 
     glBindVertexArray(0);
 
@@ -164,8 +182,6 @@ class Application : public ApplicationCore {
   }
 
  private:
-  float time = 0.f;
-
   Shader *vertex_shader;
   Shader *fragment_shader;
   ShaderProgram *shader_program;
