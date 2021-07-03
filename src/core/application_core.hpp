@@ -22,6 +22,7 @@ class ApplicationCore {
 
   ApplicationCore() : state(stateReady), title("ApplicationCore") {
     instance = this;
+    target_frame_duration = 7;
     dimension_changed = false;
 
     std::cout << "[Info]: SDL initialisation" << std::endl;
@@ -211,6 +212,7 @@ class ApplicationCore {
 
   int width;
   int height;
+  int target_frame_duration; // Target milliseconds per frame.
   bool dimension_changed;
 
   void DetectWindowDimensionChange() {
@@ -237,6 +239,8 @@ class ApplicationCore {
 
   virtual void Loop() {
     frame_times.Update(SDL_GetTicks());
+
+    auto start_time = frame_times.GetCurrent();
 
     SDL_Event sdlEvent;
     while (SDL_PollEvent(&sdlEvent)) {
@@ -265,6 +269,13 @@ class ApplicationCore {
       state = stateExit;
     }
 
+    auto proc_time = SDL_GetTicks() - start_time;
+    auto sleep_time = target_frame_duration - proc_time;
+
+    if (sleep_time > 0) {
+      // Delay until target duration is met
+      SDL_Delay(sleep_time);
+    }
   }
 
   virtual void Start() {

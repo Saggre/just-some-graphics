@@ -139,13 +139,8 @@ function libjpeg() {
 
   prepare_build_dirs libsrc/libjpeg-turbo "$dest"
 
-  if [ "$1" == "win32" ]; then
-    export CC="x86_64-w64-mingw32" && ../configure --prefix="$dest"
-  else
-    ../configure --prefix="$dest"
-  fi
-
-  make && make install
+  cmake ..
+  make
 }
 
 # Clears, creates and enters build and destination dirs
@@ -234,6 +229,9 @@ if $build_deps; then
   (verb SDL "$build_target")
   (verb GLEW "$build_target")
   (verb soil "$build_target")
+  (verb libpng "$build_target")
+  (verb zlib "$build_target")
+  (verb SDL_image "$build_target")
 fi
 
 if [ $build_target == "win32" ]; then
