@@ -28,7 +28,7 @@ class CreativeCamera : public Component {
 
   void Update() override {
     float delta_time = GetDeltaTime();
-    float speed = delta_time * 7.0f;
+    float speed = 7.0f * delta_time;
 
     auto move_delta = mathfu::vec3(0, 0, 0);
 
@@ -67,12 +67,12 @@ class CreativeCamera : public Component {
     transform->Move(move_delta * speed);
 
     auto mouse_delta = InputManager::GetMouseDelta();
-    float sens = delta_time * 10.0f;
+    float sens = 0.05f * 0.02f;
 
     const float MIN_Y = -M_PI * 0.5 + 0.01;
     const float MAX_Y = M_PI * 0.5 - 0.01;
 
-    mouse_rot_[0] += mouse_delta.y * sens * Time::delta_time_;
+    mouse_rot_[0] += mouse_delta.y * sens;
 
     if (mouse_rot_[0] < MIN_Y) {
       mouse_rot_[0] = MIN_Y;
@@ -80,16 +80,13 @@ class CreativeCamera : public Component {
       mouse_rot_[0] = MAX_Y;
     }
 
-    mouse_rot_[1] += mouse_delta.x * sens * Time::delta_time_;
+    mouse_rot_[1] += mouse_delta.x * sens;
 
     if (mouse_rot_[1] > M_PI * 2) {
       mouse_rot_[1] -= M_PI * 2;
     } else if (mouse_rot_[1] < -M_PI * 2) {
       mouse_rot_[1] += M_PI * 2;
     }
-
-    //std::cout << std::to_string(mouse.y) << "\n";
-    //std::cout << std::to_string(mouse.x) << "\n";
 
     transform->SetRotation(mathfu::quat::FromEulerAngles(mouse_rot_[0], mouse_rot_[1], 0));
   }
