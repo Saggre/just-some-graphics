@@ -188,6 +188,7 @@ if [ ! -f "CMakeLists.txt" ]; then
   exit
 fi
 
+launch=0
 build_target='linux'
 build_deps=false
 verbose=0
@@ -218,6 +219,10 @@ while test $# -gt 0; do
     build_deps=true
     shift
     ;;
+  --launch)
+    launch=1
+    shift
+    ;;
   *)
     break
     ;;
@@ -245,4 +250,11 @@ if [ $build_target == "win32" ]; then
   build_windows
 else
   build_linux
+
+  if [ $launch == 1 ]; then
+    # Launch
+    cd "$(dirname "$0")" || exit 1
+    cd ../build/bin || exit
+    ./just-some-graphics # TODO dynamic binary name
+  fi
 fi
