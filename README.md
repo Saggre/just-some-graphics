@@ -50,3 +50,9 @@ cd <root-dir>/build/bin # Binary will be located here
 
 Flag `--dependencies` builds all dependencies. Subsequent builds can omit this flag to speed up the build process
 significantly.
+
+## Development
+
+### IntelliJ example build configuration for Linux development
+
+![JetBrains build configuration!](https://i.imgur.com/CVx756V.png)
