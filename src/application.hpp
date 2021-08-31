@@ -21,6 +21,7 @@
 #include "src/core/entity.hpp"
 #include "src/core/components/mesh.hpp"
 #include "src/core/util/primitive.hpp"
+#include "src/core/util/shapes.hpp"
 #include "src/core/util/mappings.hpp"
 #include "src/core/image.hpp"
 #include "src/embed_shader.hpp"
@@ -32,8 +33,8 @@ class Application : public ApplicationCore {
     fragment_shader = Shader::FromSource(shader_frag, GL_FRAGMENT_SHADER);
     shader_program = new ShaderProgram({vertex_shader, fragment_shader});
 
-    // Test
-    auto p = Primitive::Cube();
+    //auto p = Cube();
+    auto p = Sphere();
     mesh = Mesh::FromPrimitive(p);
     entity.transform_.SetPosition(mathfu::vec3(0, 0, -15));
     entity.AddComponent(&mesh); // TODO mesh component should be in another entity..

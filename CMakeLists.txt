@@ -44,10 +44,12 @@ set(SOURCE_FILES src/main.cpp
         src/core/components/mesh.hpp
         src/core/time.hpp
         src/core/util/primitive.hpp
+        src/core/util/primitives/cube.hpp
+        src/core/util/primitives/sphere.hpp
         src/core/util/mappings.hpp
         src/core/image.hpp
         src/core/functions/core.hpp
-        src/core/functions/print.hpp)
+        src/core/functions/print.hpp src/core/util/shapes.hpp)
 
 # The main executable
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
