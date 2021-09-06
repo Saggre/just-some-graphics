@@ -35,9 +35,9 @@ class Mesh : public Component {
    */
   static Mesh FromPrimitive(const Primitive &primitive) {
     Mesh mesh = Mesh();
-    mesh.indices = std::vector<Index>(primitive.indices);
-    mesh.vertices = std::vector<Vertex>(primitive.vertices);
-    mesh.tex_coords = std::vector<Vector2>(primitive.tex_coords);
+    mesh.indices = primitive.GetIndices();
+    mesh.vertices = primitive.GetVertices();
+    mesh.tex_coords = primitive.GetTexCoords();
     return mesh;
   }
 

@@ -37,7 +37,7 @@ class ApplicationCore {
     width = DM.w;
     height = DM.h;
 
-    fullscreen = true;
+    fullscreen = false;
     if (!fullscreen) {
       width = 1000;
       height = 600;

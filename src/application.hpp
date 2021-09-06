@@ -34,7 +34,7 @@ class Application : public ApplicationCore {
     shader_program = new ShaderProgram({vertex_shader, fragment_shader});
 
     //auto p = Cube();
-    auto p = Sphere();
+    auto p = Quad();
     mesh = Mesh::FromPrimitive(p);
     entity.transform_.SetPosition(mathfu::vec3(0, 0, -15));
     entity.AddComponent(&mesh); // TODO mesh component should be in another entity..
@@ -90,7 +90,7 @@ class Application : public ApplicationCore {
     // map vbo to shader attributes
     shader_program->SetAttribute("vPosition", 3, sizeof(Vertex), 0);
     shader_program->SetAttribute("vNormal", 3, sizeof(Vertex), offsetof(Vertex, normal));
-    shader_program->SetAttribute("vTexCoord", 4, sizeof(Vertex), offsetof(Vertex, tex_coord));
+    shader_program->SetAttribute("vTexCoord", 2, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
     // bind the ibo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);

@@ -8,5 +8,7 @@
 // Include all primitive shapes
 #include "./primitives/cube.hpp"
 #include "./primitives/sphere.hpp"
+#include "./primitives/cylinder.hpp"
+#include "./primitives/quad.hpp"
 
 #endif //JUST_SOME_GRAPHICS_SRC_CORE_UTIL_SHAPES_HPP_
